@@ -712,7 +712,7 @@ function rebuildarForm() {
   const grid=document.getElementById('form-cats'); if(!grid) return;
   // Salva seleções atuais
   const estadoAtual={};
-  CATS.filter(c=>c.id!=='p3').forEach(c=>{ estadoAtual[c.id]=estado[c.id]||[{nome:'',turno:'DIURNO',obs:''}]; });
+  CATS.filter(c=>c.id!=='p3').forEach(c=>{ estadoAtual[c.id]=estado[c.id]||[{nome:'',turno:turnoPlantao(),obs:''}]; });
   estado=estadoAtual;
   grid.innerHTML='';
   CATS.filter(c=>c.id!=='p3').forEach(cat=>{
@@ -795,7 +795,6 @@ async function carregarPlantao() {
   const chave = data + '_' + turno;
   const snap  = await getDoc(doc(db, 'plantoes', chave));
   if (snap.exists()) {
-    // Carrega registro existente
     const r = snap.data();
     editKey = chave;
     document.getElementById('f-obs').value       = r.obs || '';
@@ -811,7 +810,6 @@ async function carregarPlantao() {
     document.getElementById('msg-edit').textContent = `✏️ Editando: ${fmtData(data)} — ${turno}`;
     document.getElementById('btn-salvar').textContent = '💾 Salvar Alterações';
   } else {
-    // Registro novo — limpa tudo
     editKey = null;
     document.getElementById('f-obs').value    = '';
     document.getElementById('p3m-nome').value = '';
@@ -820,7 +818,12 @@ async function carregarPlantao() {
     document.getElementById('p3t-obs').value  = '';
     document.getElementById('msg-edit').textContent = '';
     document.getElementById('btn-salvar').textContent = '💾 Salvar Escala do Plantão';
+    // Reseta estado — slots vazios recebem o turno atual do plantão
     initEstado();
+    // Slots com nome preservam o turno escolhido; slots vazios recebem o novo turno
+    CATS.filter(c=>c.id!=='p3').forEach(cat=>{
+      (estado[cat.id]||[]).forEach(slot=>{ if(!slot.nome) slot.turno = turno; });
+    });
   }
   rebuildarForm();
 }
