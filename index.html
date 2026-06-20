@@ -153,7 +153,11 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
 .prof-item-nome.inativo { opacity:0.4; text-decoration:line-through; }
 .badge-ativo { font-size:0.68rem; padding:2px 7px; border-radius:10px; font-weight:700; background:#DCFCE7; color:#166534; }
 .badge-inativo { font-size:0.68rem; padding:2px 7px; border-radius:10px; font-weight:700; background:#FEE2E2; color:#991B1B; }
-.btn-toggle { font-size:0.72rem; padding:3px 9px; border-radius:5px; border:1px solid var(--cinza-borda); background:white; cursor:pointer; color:var(--cinza); white-space:nowrap; }
+.btn-toggle { font-size:0.72rem; padding:4px 10px; border-radius:5px; border:1.5px solid; cursor:pointer; white-space:nowrap; font-weight:600; }
+.btn-toggle.desativar { background:#DCFCE7; color:#166534; border-color:#86EFAC; }
+.btn-toggle.desativar:hover { background:#BBF7D0; }
+.btn-toggle.reativar { background:#F1F5F9; color:var(--cinza); border-color:var(--cinza-borda); }
+.btn-toggle.reativar:hover { background:#E2E8F0; }
 .btn-excluir-p { font-size:0.8rem; padding:3px 6px; border:none; background:none; cursor:pointer; color:var(--cinza); }
 .btn-excluir-p:hover { color:var(--vermelho); }
 .btn-fechar-prof { width:100%; padding:9px; background:var(--cinza-claro); color:var(--cinza); border:1.5px solid var(--cinza-borda); border-radius:7px; font-weight:600; cursor:pointer; margin-top:14px; }
@@ -456,7 +460,21 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
     <div class="card-title" style="display:block;">👥 Gerenciar Profissionais</div>
     <p style="font-size:0.83rem;color:var(--cinza);margin-bottom:14px;">P3 e Evolução usam automaticamente os profissionais cadastrados em <strong>Médicos Plantonistas</strong>.</p>
     <div class="add-prof-row">
-      <select id="new-prof-cat"></select>
+      <select id="new-prof-cat">
+        <option value="recepcao">👩‍💻 Recepção</option>
+        <option value="portaria">🫸🏻 Ag. de Portaria</option>
+        <option value="maqueiro">🧑‍🦽 Maqueiro</option>
+        <option value="motorista">🚑 Motorista</option>
+        <option value="cozinheira">👩🏻‍🍳 Cozinheira</option>
+        <option value="asg">🚮 ASG</option>
+        <option value="copa">🛎️ Copa</option>
+        <option value="farmacia">💊 Farmácia</option>
+        <option value="social">👩‍🏫 Serviço Social</option>
+        <option value="tec_enf">👩🏻‍⚕️ Téc. Enfermagem</option>
+        <option value="enfermeiro">🩺 Enfermeiros(as)</option>
+        <option value="medico">👨‍⚕️ Médicos Plantonistas</option>
+        <option value="fisio">🦺 Fisioterapeuta</option>
+      </select>
       <input type="text" id="new-prof-nome" placeholder="Nome completo do profissional">
       <button class="btn-add-prof" onclick="adicionarProfissional()">+ Adicionar</button>
     </div>
@@ -623,7 +641,7 @@ function renderListaProfs() {
         return `<div class="prof-item">
           <span class="prof-item-nome${ativo?'':' inativo'}">${p.nome}</span>
           <span class="${ativo?'badge-ativo':'badge-inativo'}">${ativo?'Ativo':'Inativo'}</span>
-          <button class="btn-toggle" onclick="toggleProf('${p.id}',${ativo})">${ativo?'⏸ Desativar':'▶ Reativar'}</button>
+          <button class="btn-toggle ${ativo?'desativar':'reativar'}" onclick="toggleProf('${p.id}',${ativo})">${ativo?'⏸ Desativar':'▶ Reativar'}</button>
           <button class="btn-excluir-p" onclick="excluirProf('${p.id}','${p.nome.replace(/'/g,"\\'")}')">🗑️</button>
         </div>`;
       }).join('')}
