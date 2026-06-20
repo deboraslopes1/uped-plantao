@@ -604,10 +604,7 @@ onSnapshot(collection(db,'profissionais'), snap=>{
     .sort((a,b)=> a.catId.localeCompare(b.catId) || a.nome.localeCompare(b.nome));
   rebuildarForm();
   atualizarSelectsP3();
-  // Sempre popula o select de categoria da aba equipe
-  const selCat=document.getElementById('new-prof-cat');
-  if(selCat) selCat.innerHTML=CATS_CADASTRO.map(c=>`<option value="${c.id}">${c.icon} ${c.label}</option>`).join('');
-  // Atualiza lista se aba equipe estiver ativa
+  // Atualiza lista se aba equipe estiver ativa, preservando a categoria selecionada
   if(document.getElementById('panel-equipe')?.classList.contains('active')) renderListaProfs();
 });
 
@@ -663,7 +660,7 @@ window.adicionarProfissional = async function() {
   toast('✅ Profissional adicionado!');
 };
 window.toggleProf = async(id, estaAtivo)=>{
-  // Atualiza localmente de imediato para feedback visual instantâneo
+  const catSel = document.getElementById('new-prof-cat')?.value;
   const prof = profissionais.find(p=>p.id===id);
   if(prof) prof.ativo = !estaAtivo;
   renderListaProfs();
@@ -672,16 +669,18 @@ window.toggleProf = async(id, estaAtivo)=>{
   toast(estaAtivo ? '⏸ Profissional desativado.' : '▶ Profissional reativado.');
   try {
     await setDoc(doc(db,'profissionais',id),{ativo:!estaAtivo},{merge:true});
+    // Restaura categoria após Firebase atualizar o listener
+    if(catSel){ const s=document.getElementById('new-prof-cat'); if(s) s.value=catSel; }
   } catch(e) {
-    // Reverte se falhar
     if(prof) prof.ativo = estaAtivo;
+    if(catSel){ const s=document.getElementById('new-prof-cat'); if(s) s.value=catSel; }
     renderListaProfs();
     toast('❌ Erro ao salvar: '+e.message,'#E53E3E');
   }
 };
 window.excluirProf = async(id, nome)=>{
   if(!confirm(`Excluir "${nome}"? Esta ação não pode ser desfeita.`)) return;
-  // Remove localmente de imediato
+  const catSel = document.getElementById('new-prof-cat')?.value;
   const idx = profissionais.findIndex(p=>p.id===id);
   if(idx>-1) profissionais.splice(idx,1);
   renderListaProfs();
@@ -690,6 +689,7 @@ window.excluirProf = async(id, nome)=>{
   toast('🗑️ Profissional removido.');
   try {
     await deleteDoc(doc(db,'profissionais',id));
+    if(catSel){ const s=document.getElementById('new-prof-cat'); if(s) s.value=catSel; }
   } catch(e) { toast('❌ Erro ao excluir: '+e.message,'#E53E3E'); }
 };
 
