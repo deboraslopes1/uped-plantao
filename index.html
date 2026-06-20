@@ -270,21 +270,6 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
   </div>
 </div>
 
-<!-- MODAL GERENCIAR PROFISSIONAIS -->
-<div class="modal-prof-overlay hidden" id="modal-prof">
-  <div class="modal-prof-box">
-    <h3>👥 Gerenciar Profissionais</h3>
-    <p class="sub">Profissionais cadastrados aqui aparecem nos selects do formulário de registro.</p>
-    <div class="add-prof-row">
-      <select id="new-prof-cat"></select>
-      <input type="text" id="new-prof-nome" placeholder="Nome completo">
-      <button class="btn-add-prof" onclick="adicionarProfissional()">+ Adicionar</button>
-    </div>
-    <div class="prof-erro" id="prof-erro"></div>
-    <div id="lista-profs"></div>
-    <button class="btn-fechar-prof" onclick="document.getElementById('modal-prof').classList.add('hidden')">Fechar</button>
-  </div>
-</div>
 
 <header>
   <div style="font-size:26px">🏥</div>
@@ -601,8 +586,11 @@ onSnapshot(collection(db,'profissionais'), snap=>{
     .sort((a,b)=> a.catId.localeCompare(b.catId) || a.nome.localeCompare(b.nome));
   rebuildarForm();
   atualizarSelectsP3();
-  const mp=document.getElementById('modal-prof');
-  if(!mp.classList.contains('hidden')) renderListaProfs();
+  // Sempre popula o select de categoria da aba equipe
+  const selCat=document.getElementById('new-prof-cat');
+  if(selCat) selCat.innerHTML=CATS_CADASTRO.map(c=>`<option value="${c.id}">${c.icon} ${c.label}</option>`).join('');
+  // Atualiza lista se aba equipe estiver ativa
+  if(document.getElementById('panel-equipe')?.classList.contains('active')) renderListaProfs();
 });
 
 function profsAtivos(catId) {
@@ -613,36 +601,34 @@ function profsAtivos(catId) {
 window.abrirGerenciarProfs = ()=>{ switchTab('equipe'); };
 
 function renderListaProfs() {
-  // Renderiza tanto no modal (legado) quanto na aba equipe
-  ['lista-profs','lista-profs-equipe'].forEach(elId=>{
-    const el=document.getElementById(elId); if(!el) return;
-    const comProfs=CATS_CADASTRO.filter(c=>profissionais.some(p=>p.catId===c.id));
-    if(comProfs.length===0){ el.innerHTML='<div class="card"><p style="font-size:0.83rem;color:var(--cinza);text-align:center;padding:16px;">Nenhum profissional cadastrado ainda.</p></div>'; return; }
-    el.innerHTML=comProfs.map(cat=>{
-      const pp=profissionais.filter(p=>p.catId===cat.id);
-      const usadoPor=CATS.filter(c=>CAT_FONTE[c.id]===cat.id).map(c=>c.label);
-      return `<div class="card" style="margin-bottom:10px;">
-        <div class="card-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span>${cat.icon} ${cat.label}</span>
-          ${usadoPor.length?`<span style="font-size:0.72rem;font-weight:400;color:var(--cinza);">também usado em: ${usadoPor.join(', ')}</span>`:''}
-        </div>
-        ${pp.map(p=>{
-          const ativo=p.ativo!==false;
-          return `<div class="prof-item">
-            <span class="prof-item-nome${ativo?'':' inativo'}">${p.nome}</span>
-            <span class="${ativo?'badge-ativo':'badge-inativo'}">${ativo?'Ativo':'Inativo'}</span>
-            <button class="btn-toggle" onclick="toggleProf('${p.id}',${ativo})">${ativo?'⏸ Desativar':'▶ Reativar'}</button>
-            <button class="btn-excluir-p" onclick="excluirProf('${p.id}','${p.nome.replace(/'/g,"\\'")}')">🗑️</button>
-          </div>`;
-        }).join('')}
-      </div>`;
-    }).join('');
-  });
+  const el=document.getElementById('lista-profs-equipe'); if(!el) return;
   // Popula select de categorias
-  ['new-prof-cat'].forEach(id=>{
-    const sel=document.getElementById(id); if(!sel) return;
-    sel.innerHTML=CATS_CADASTRO.map(c=>`<option value="${c.id}">${c.icon} ${c.label}</option>`).join('');
-  });
+  const selCat=document.getElementById('new-prof-cat');
+  if(selCat) selCat.innerHTML=CATS_CADASTRO.map(c=>`<option value="${c.id}">${c.icon} ${c.label}</option>`).join('');
+  const comProfs=CATS_CADASTRO.filter(c=>profissionais.some(p=>p.catId===c.id));
+  if(comProfs.length===0){
+    el.innerHTML='<div class="card"><p style="font-size:0.83rem;color:var(--cinza);text-align:center;padding:16px;">Nenhum profissional cadastrado ainda.</p></div>';
+    return;
+  }
+  el.innerHTML=comProfs.map(cat=>{
+    const pp=profissionais.filter(p=>p.catId===cat.id);
+    const usadoPor=CATS.filter(c=>CAT_FONTE[c.id]===cat.id).map(c=>c.label);
+    return `<div class="card" style="margin-bottom:10px;">
+      <div class="card-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span>${cat.icon} ${cat.label}</span>
+        ${usadoPor.length?`<span style="font-size:0.72rem;font-weight:400;color:var(--cinza);">também usado em: ${usadoPor.join(', ')}</span>`:''}
+      </div>
+      ${pp.map(p=>{
+        const ativo=p.ativo!==false;
+        return `<div class="prof-item">
+          <span class="prof-item-nome${ativo?'':' inativo'}">${p.nome}</span>
+          <span class="${ativo?'badge-ativo':'badge-inativo'}">${ativo?'Ativo':'Inativo'}</span>
+          <button class="btn-toggle" onclick="toggleProf('${p.id}',${ativo})">${ativo?'⏸ Desativar':'▶ Reativar'}</button>
+          <button class="btn-excluir-p" onclick="excluirProf('${p.id}','${p.nome.replace(/'/g,"\\'")}')">🗑️</button>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
 }
 
 window.adicionarProfissional = async function() {
@@ -658,14 +644,35 @@ window.adicionarProfissional = async function() {
   document.getElementById('new-prof-nome').value='';
   toast('✅ Profissional adicionado!');
 };
-window.toggleProf = async(id,estaAtivo)=>{
-  await setDoc(doc(db,'profissionais',id),{ativo:!estaAtivo},{merge:true});
-  toast(estaAtivo?'⏸ Desativado.':'▶ Reativado.');
+window.toggleProf = async(id, estaAtivo)=>{
+  // Atualiza localmente de imediato para feedback visual instantâneo
+  const prof = profissionais.find(p=>p.id===id);
+  if(prof) prof.ativo = !estaAtivo;
+  renderListaProfs();
+  rebuildarForm();
+  atualizarSelectsP3();
+  toast(estaAtivo ? '⏸ Profissional desativado.' : '▶ Profissional reativado.');
+  try {
+    await setDoc(doc(db,'profissionais',id),{ativo:!estaAtivo},{merge:true});
+  } catch(e) {
+    // Reverte se falhar
+    if(prof) prof.ativo = estaAtivo;
+    renderListaProfs();
+    toast('❌ Erro ao salvar: '+e.message,'#E53E3E');
+  }
 };
-window.excluirProf = async(id,nome)=>{
-  if(!confirm(`Excluir "${nome}"?`)) return;
-  await deleteDoc(doc(db,'profissionais',id));
-  toast('🗑️ Removido.');
+window.excluirProf = async(id, nome)=>{
+  if(!confirm(`Excluir "${nome}"? Esta ação não pode ser desfeita.`)) return;
+  // Remove localmente de imediato
+  const idx = profissionais.findIndex(p=>p.id===id);
+  if(idx>-1) profissionais.splice(idx,1);
+  renderListaProfs();
+  rebuildarForm();
+  atualizarSelectsP3();
+  toast('🗑️ Profissional removido.');
+  try {
+    await deleteDoc(doc(db,'profissionais',id));
+  } catch(e) { toast('❌ Erro ao excluir: '+e.message,'#E53E3E'); }
 };
 
 // ===== FORMULÁRIO REGISTRO =====
