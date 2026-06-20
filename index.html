@@ -1035,8 +1035,10 @@ window.renderTabelaCat=function(){
   if(lista.length===0){ wrap.innerHTML='<div class="empty"><div class="big">📋</div><div>Nenhum plantão no período.</div></div>'; return; }
   const catsRender=catFiltro?CATS.filter(c=>c.id===catFiltro):CATS;
   let html='';
+  // Uma coluna por DATA (não por plantão) — siglas acumulam D+N no mesmo dia
+  const datas=[...new Set(lista.map(r=>r.data))].sort();
+
   catsRender.forEach(cat=>{
-    // Coletar nomes únicos
     const nomeSet=new Set();
     lista.forEach(r=>{
       if(cat.id==='p3'){
@@ -1053,24 +1055,28 @@ window.renderTabelaCat=function(){
       <div class="tabela-wrap"><table class="tabela-cat">
         <thead><tr>
           <th class="th-nome">Profissional</th>
-          ${lista.map(r=>{
-            const [,m,d]=r.data.split('-');
-            const ds=DIAS[new Date(r.data+'T12:00:00').getDay()];
-            return `<th class="th-data" title="${fmtData(r.data)} ${r.turno}">${d}/${m}<br><small>${ds}</small></th>`;
+          ${datas.map(d=>{
+            const [,m,dd]=d.split('-');
+            const ds=DIAS[new Date(d+'T12:00:00').getDay()];
+            return `<th class="th-data">${dd}/${m}<br><small>${ds}</small></th>`;
           }).join('')}
           <th class="th-total">Total</th>
         </tr></thead>
         <tbody>
         ${nomes.map(nome=>{
           let total=0;
-          const cels=lista.map(r=>{
+          const cels=datas.map(data=>{
+            // Todos os plantões deste dia
+            const plantoesNoDia=lista.filter(r=>r.data===data);
             let siglas=[];
-            if(cat.id==='p3'){
-              if(r.equipe?.p3?.manha?.nome===nome) siglas.push('M');
-              if(r.equipe?.p3?.tarde?.nome===nome) siglas.push('T');
-            } else {
-              (r.equipe?.[cat.id]||[]).forEach(p=>{ if(p.nome===nome) siglas.push(SIGLAS[p.turno]||p.turno[0]); });
-            }
+            plantoesNoDia.forEach(r=>{
+              if(cat.id==='p3'){
+                if(r.equipe?.p3?.manha?.nome===nome) siglas.push('M');
+                if(r.equipe?.p3?.tarde?.nome===nome) siglas.push('T');
+              } else {
+                (r.equipe?.[cat.id]||[]).forEach(p=>{ if(p.nome===nome) siglas.push(SIGLAS[p.turno]||p.turno[0]); });
+              }
+            });
             if(siglas.length){ total++; return `<td>${siglas.map(s=>`<span class="sigla-${s}">${s}</span>`).join(' ')}</td>`; }
             return '<td style="color:var(--cinza-borda);">—</td>';
           }).join('');
@@ -1087,6 +1093,7 @@ window.exportarCatCSV=function(){
   const catFiltro=document.getElementById('fi-cat').value;
   const lista=plantoesFiltrados().sort((a,b)=>a.data.localeCompare(b.data));
   if(!lista.length){ toast('⚠️ Nenhum dado.','#E53E3E'); return; }
+  const datas=[...new Set(lista.map(r=>r.data))].sort();
   const catsEx=catFiltro?CATS.filter(c=>c.id===catFiltro):CATS;
   let csv='\uFEFF';
   catsEx.forEach(cat=>{
@@ -1098,14 +1105,17 @@ window.exportarCatCSV=function(){
     if(!nomeSet.size) return;
     const nomes=[...nomeSet].sort();
     csv+=`\n${cat.label.toUpperCase()}\n`;
-    csv+=['Profissional',...lista.map(r=>fmtData(r.data)),'Total'].join(';')+'\n';
+    csv+=['Profissional',...datas.map(d=>fmtData(d)),'Total'].join(';')+'\n';
     nomes.forEach(nome=>{
       let total=0;
       const linha=[nome];
-      lista.forEach(r=>{
+      datas.forEach(data=>{
+        const plantoesNoDia=lista.filter(r=>r.data===data);
         let siglas=[];
-        if(cat.id==='p3'){ if(r.equipe?.p3?.manha?.nome===nome) siglas.push('M'); if(r.equipe?.p3?.tarde?.nome===nome) siglas.push('T'); }
-        else (r.equipe?.[cat.id]||[]).forEach(p=>{ if(p.nome===nome) siglas.push(SIGLAS[p.turno]||p.turno[0]); });
+        plantoesNoDia.forEach(r=>{
+          if(cat.id==='p3'){ if(r.equipe?.p3?.manha?.nome===nome) siglas.push('M'); if(r.equipe?.p3?.tarde?.nome===nome) siglas.push('T'); }
+          else (r.equipe?.[cat.id]||[]).forEach(p=>{ if(p.nome===nome) siglas.push(SIGLAS[p.turno]||p.turno[0]); });
+        });
         if(siglas.length){ total++; linha.push(siglas.join('+')); } else linha.push('');
       });
       linha.push(total); csv+=linha.join(';')+'\n';
