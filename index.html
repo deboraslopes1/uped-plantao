@@ -618,7 +618,7 @@ function profsAtivos(catId) {
 
 window.abrirGerenciarProfs = ()=>{ switchTab('equipe'); };
 
-function renderListaProfs() {
+window.renderListaProfs = function renderListaProfs() {
   const el=document.getElementById('lista-profs-equipe'); if(!el) return;
   const catAtual = document.getElementById('new-prof-cat')?.value || '';
   const pp = catAtual ? profissionais.filter(p=>p.catId===catAtual) : [];
