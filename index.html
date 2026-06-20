@@ -621,34 +621,29 @@ window.abrirGerenciarProfs = ()=>{ switchTab('equipe'); };
 function renderListaProfs() {
   const el=document.getElementById('lista-profs-equipe'); if(!el) return;
   const catAtual = document.getElementById('new-prof-cat')?.value || '';
-  // Filtra apenas a categoria selecionada, ou todas se nenhuma tiver profissionais
-  const catsFiltradas = catAtual
-    ? CATS_CADASTRO.filter(c=>c.id===catAtual)
-    : CATS_CADASTRO.filter(c=>profissionais.some(p=>p.catId===c.id));
-  if(catsFiltradas.length===0 || !profissionais.some(p=>catsFiltradas.some(c=>c.id===p.catId))){
-    el.innerHTML='<div class="card"><p style="font-size:0.83rem;color:var(--cinza);text-align:center;padding:16px;">Nenhum profissional cadastrado nesta categoria ainda.</p></div>';
+  const pp = catAtual ? profissionais.filter(p=>p.catId===catAtual) : [];
+  const cat = CATS_CADASTRO.find(c=>c.id===catAtual);
+  if(!cat){ el.innerHTML=''; return; }
+  const usadoPor=CATS.filter(c=>CAT_FONTE[c.id]===catAtual).map(c=>c.label);
+  if(pp.length===0){
+    el.innerHTML=`<div class="card"><p style="font-size:0.83rem;color:var(--cinza);text-align:center;padding:16px;">Nenhum profissional cadastrado em <strong>${cat.label}</strong> ainda.</p></div>`;
     return;
   }
-  el.innerHTML=catsFiltradas.map(cat=>{
-    const pp=profissionais.filter(p=>p.catId===cat.id);
-    if(!pp.length) return '';
-    const usadoPor=CATS.filter(c=>CAT_FONTE[c.id]===cat.id).map(c=>c.label);
-    return `<div class="card" style="margin-bottom:10px;">
-      <div class="card-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <span>${cat.icon} ${cat.label}</span>
-        ${usadoPor.length?`<span style="font-size:0.72rem;font-weight:400;color:var(--cinza);">também usado em: ${usadoPor.join(', ')}</span>`:''}
-      </div>
-      ${pp.map(p=>{
-        const ativo=p.ativo!==false;
-        return `<div class="prof-item">
-          <span class="prof-item-nome${ativo?'':' inativo'}">${p.nome}</span>
-          <span class="${ativo?'badge-ativo':'badge-inativo'}">${ativo?'Ativo':'Inativo'}</span>
-          <button class="btn-toggle ${ativo?'desativar':'reativar'}" onclick="toggleProf('${p.id}',${ativo})">${ativo?'⏸ Desativar':'▶ Reativar'}</button>
-          <button class="btn-excluir-p" onclick="excluirProf('${p.id}','${p.nome.replace(/'/g,"\\'")}')">🗑️</button>
-        </div>`;
-      }).join('')}
-    </div>`;
-  }).join('');
+  el.innerHTML=`<div class="card">
+    <div class="card-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span>${cat.icon} ${cat.label}</span>
+      ${usadoPor.length?`<span style="font-size:0.72rem;font-weight:400;color:var(--cinza);">também usado em: ${usadoPor.join(', ')}</span>`:''}
+    </div>
+    ${pp.map(p=>{
+      const ativo=p.ativo!==false;
+      return `<div class="prof-item">
+        <span class="prof-item-nome${ativo?'':' inativo'}">${p.nome}</span>
+        <span class="${ativo?'badge-ativo':'badge-inativo'}">${ativo?'Ativo':'Inativo'}</span>
+        <button class="btn-toggle ${ativo?'desativar':'reativar'}" onclick="toggleProf('${p.id}',${ativo})">${ativo?'⏸ Desativar':'▶ Reativar'}</button>
+        <button class="btn-excluir-p" onclick="excluirProf('${p.id}','${p.nome.replace(/'/g,"\\'")}')">🗑️</button>
+      </div>`;
+    }).join('')}
+  </div>`;
 }
 
 window.adicionarProfissional = async function() {
@@ -745,9 +740,8 @@ function renderCatBody(catId) {
       ativos.map(p=>`<option value="${p.nome}" ${slot.nome===p.nome?'selected':''}>${abr(p.nome)}</option>`).join('');
     selNome.title = slot.nome||'';
     selNome.addEventListener('change',e=>{ estado[catId][i].nome=e.target.value; selNome.title=e.target.value; });
-    // Select turno — Manhã e Tarde disponíveis apenas no Diurno
-    // Se slot já tem turno salvo, sempre mostra todas as opções para permitir edição livre
-    const disponiveis = slot.nome ? TURNOS_PROF : turnosProfDisponiveis();
+    // Select turno — opções baseadas no turno do plantão
+    const disponiveis = turnosProfDisponiveis();
     const selTurno=document.createElement('select'); selTurno.className='sel-turno-prof';
     selTurno.innerHTML=disponiveis.map(t=>`<option value="${t.v}" ${slot.turno===t.v?'selected':''}>${t.l}</option>`).join('');
     selTurno.addEventListener('change',e=>{ estado[catId][i].turno=e.target.value; });
