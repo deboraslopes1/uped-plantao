@@ -782,7 +782,9 @@ function novoRegistro() {
   document.getElementById('p3t-nome').value='';
   document.getElementById('p3t-obs').value='';
   document.getElementById('msg-edit').textContent='';
-  document.getElementById('btn-salvar').textContent='💾 Salvar Escala do Plantão';
+  const btn=document.getElementById('btn-salvar');
+  btn.disabled=false;
+  btn.textContent='💾 Salvar Escala do Plantão';
   initEstado(); rebuildarForm();
 }
 window.novoRegistro=novoRegistro;
