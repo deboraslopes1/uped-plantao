@@ -741,11 +741,46 @@ function novoRegistro() {
 }
 window.novoRegistro=novoRegistro;
 
-// Ao mudar turno do plantão: atualiza apenas as opções disponíveis nos selects
-// (Manhã/Tarde só visíveis no Diurno), mas não altera turnos já escolhidos
-document.getElementById('f-turno').addEventListener('change', ()=>{
-  CATS.filter(c=>c.id!=='p3').forEach(cat=>renderCatBody(cat.id));
-});
+// Ao mudar data ou turno: carrega registro existente do Firebase ou limpa o form
+async function carregarPlantao() {
+  const data  = document.getElementById('f-data').value;
+  const turno = document.getElementById('f-turno').value;
+  if (!data || !turno) return;
+  const chave = data + '_' + turno;
+  const snap  = await getDoc(doc(db, 'plantoes', chave));
+  if (snap.exists()) {
+    // Carrega registro existente
+    const r = snap.data();
+    editKey = chave;
+    document.getElementById('f-obs').value       = r.obs || '';
+    document.getElementById('p3m-nome').value    = r.equipe?.p3?.manha?.nome || '';
+    document.getElementById('p3m-obs').value     = r.equipe?.p3?.manha?.obs  || '';
+    document.getElementById('p3t-nome').value    = r.equipe?.p3?.tarde?.nome || '';
+    document.getElementById('p3t-obs').value     = r.equipe?.p3?.tarde?.obs  || '';
+    initEstado();
+    CATS.filter(c=>c.id!=='p3').forEach(cat=>{
+      const pp = r.equipe?.[cat.id];
+      if (pp && pp.length > 0) estado[cat.id] = pp.map(p=>({nome:p.nome||'',turno:p.turno||turno,obs:p.obs||''}));
+    });
+    document.getElementById('msg-edit').textContent = `✏️ Editando: ${fmtData(data)} — ${turno}`;
+    document.getElementById('btn-salvar').textContent = '💾 Salvar Alterações';
+  } else {
+    // Registro novo — limpa tudo
+    editKey = null;
+    document.getElementById('f-obs').value    = '';
+    document.getElementById('p3m-nome').value = '';
+    document.getElementById('p3m-obs').value  = '';
+    document.getElementById('p3t-nome').value = '';
+    document.getElementById('p3t-obs').value  = '';
+    document.getElementById('msg-edit').textContent = '';
+    document.getElementById('btn-salvar').textContent = '💾 Salvar Escala do Plantão';
+    initEstado();
+  }
+  rebuildarForm();
+}
+
+document.getElementById('f-data').addEventListener('change',  carregarPlantao);
+document.getElementById('f-turno').addEventListener('change', carregarPlantao);
 
 async function salvar() {
   const data =document.getElementById('f-data').value;
