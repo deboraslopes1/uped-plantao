@@ -697,8 +697,8 @@ window.excluirProf = async(id, nome)=>{
 function turnoPlantao() { return document.getElementById('f-turno')?.value || 'NOTURNO'; }
 
 function turnosProfDisponiveis() {
-  // Manhã e Tarde só disponíveis no plantão Diurno
-  if (turnoPlantao() === 'DIURNO') return TURNOS_PROF;
+  if (turnoPlantao() === 'DIURNO')
+    return TURNOS_PROF.filter(t => t.v !== 'NOTURNO');
   return TURNOS_PROF.filter(t => t.v === 'NOTURNO');
 }
 
