@@ -924,7 +924,7 @@ async function salvar() {
     manha:{ nome:document.getElementById('p3m-nome').value, obs:document.getElementById('p3m-obs').value },
     tarde:{ nome:document.getElementById('p3t-nome').value, obs:document.getElementById('p3t-obs').value }
   };
-  const key=editKey||(data+'_'+turno);
+  const key = data+'_'+turno;
   const reg={ key, data, turno, obs, equipe, atualizadoEm:new Date().toISOString() };
   const btn=document.getElementById('btn-salvar');
   btn.disabled=true; btn.textContent='Salvando...';
@@ -1406,10 +1406,25 @@ function renderHistProd(l){
         <span style="margin-left:auto;font-size:0.78rem;background:var(--azul);color:white;padding:2px 9px;border-radius:20px;font-weight:700;">${r.total||0} atend.</span>
         <span class="chevron">▼</span>
       </div>
-      <div class="prod-hist-body"><div class="prod-num-grid">${itens}</div></div>
+      <div class="prod-hist-body">
+        <div class="prod-num-grid">${itens}</div>
+        <div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--cinza-borda);">
+          <button onclick="excluirProducao('${r.key}','${d}/${m}/${a}','${r.turno}')" style="padding:5px 12px;background:white;color:var(--cinza);border:1.5px solid var(--cinza-borda);border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#FEE2E2';this.style.color='var(--vermelho)';this.style.borderColor='#FECACA'" onmouseout="this.style.background='white';this.style.color='var(--cinza)';this.style.borderColor='var(--cinza-borda)'">🗑️ Excluir registro</button>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
+window.excluirProducao=function(key, dataFmt, turno){
+  abrirSenha('🗑️ Excluir Produção',`Informe a senha de supervisor para excluir o registro de ${dataFmt} — ${turno}.`,async()=>{
+    try{
+      await deleteDoc(doc(db,'producao',key));
+      toast('🗑️ Registro de produção excluído.');
+      // Se era o registro aberto no formulário, recarrega
+      if(chaveProd()===key) await verificarBloqueio();
+    } catch(e){ toast('❌ '+e.message,'#E53E3E'); }
+  });
+};
 window.toggleProdCard=function(h){ const b=h.nextElementSibling; b.classList.toggle('open'); h.querySelector('.chevron').classList.toggle('open',b.classList.contains('open')); };
 
 window.exportarProdCSV=function(){
