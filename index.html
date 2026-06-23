@@ -1259,11 +1259,13 @@ window.switchGestao=function(sec){
     document.getElementById('gtab-'+s).classList.toggle('active',s===sec);
     document.getElementById('gsec-'+s).style.display=s===sec?'block':'none';
   });
+  aplicarPeriodoPadrao(); // garante datas preenchidas
   if(sec==='equipe'){
     abrirSenha('👥 Gerenciar Equipe','Informe a senha de supervisor para acessar o gerenciamento de profissionais.',()=>{
       renderListaProfs();
     });
   }
+  if(sec==='dash') renderDashboard();
   if(sec==='hist') filtrarProducao();
 };
 
@@ -1369,8 +1371,7 @@ function getProdFiltradas(){
 }
 function filtrarProducao(){ const l=getProdFiltradas(); renderResumoProd(l); renderGraficoProd(l); renderHistProd(l); }
 window.filtrarProducao=filtrarProducao;
-function limparProd(){ ['rp-ini','rp-fim'].forEach(id=>document.getElementById(id).value=''); document.getElementById('rp-turno').value=''; filtrarProducao(); }
-window.limparProd=limparProd;
+function limparProd_placeholder(){} // substituída abaixo
 
 function renderResumoProd(l){
   const el=document.getElementById('resumo-prod'); if(!l.length){ el.innerHTML=''; return; }
@@ -1486,16 +1487,35 @@ window.renderDashboard=function(){
   chartFichas=new Chart(document.getElementById('ch-fichas'),{type:'bar',data:{labels:['🔵 Azul','🟢 Verde','🟡 Amarela','🟠 Laranja','🔴 Vermelha'],datasets:[{data:[azul,verd,amr,lar,verm],backgroundColor:['#3B82F6','#22C55E','#EAB308','#F97316','#EF4444'],borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}});
 };
 window.limparDashboard=function(){
-  const h=new Date(); const h30=new Date(); h30.setDate(h.getDate()-30);
-  document.getElementById('db-fim').valueAsDate=h; document.getElementById('db-ini').valueAsDate=h30;
+  const {ini,fim}=periodoUltimoMes();
+  document.getElementById('db-ini').valueAsDate=ini;
+  document.getElementById('db-fim').valueAsDate=fim;
   document.getElementById('db-turno').value=''; renderDashboard();
 };
+function limparProd(){
+  const {ini,fim}=periodoUltimoMes();
+  document.getElementById('rp-ini').valueAsDate=ini;
+  document.getElementById('rp-fim').valueAsDate=fim;
+  document.getElementById('rp-turno').value=''; filtrarProducao();
+}
+window.limparProd=limparProd;
 
 // ===== INIT =====
 document.getElementById('footer-ano').textContent=new Date().getFullYear();
 document.getElementById('f-data').valueAsDate=new Date();
 document.getElementById('fp-data').valueAsDate=new Date();
-(function(){ const h=new Date(); const h30=new Date(); h30.setDate(h.getDate()-30); document.getElementById('db-fim').valueAsDate=h; document.getElementById('db-ini').valueAsDate=h30; })();
+
+function periodoUltimoMes() {
+  const fim=new Date(); const ini=new Date(); ini.setDate(ini.getDate()-30);
+  return {ini,fim};
+}
+function aplicarPeriodoPadrao() {
+  const {ini,fim}=periodoUltimoMes();
+  ['db-ini','rp-ini'].forEach(id=>{ const el=document.getElementById(id); if(el&&!el.value) el.valueAsDate=ini; });
+  ['db-fim','rp-fim'].forEach(id=>{ const el=document.getElementById(id); if(el&&!el.value) el.valueAsDate=fim; });
+}
+aplicarPeriodoPadrao();
+
 initEstado();
 rebuildarForm();
 </script>
