@@ -387,7 +387,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
   <div class="card" style="margin-bottom:14px;" id="card-censo-reg">
     <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
       <span>🏥 Censo do Plantão</span>
-      <span style="font-size:0.72rem;font-weight:400;color:var(--cinza);">Salvo separadamente ao clicar em Registrar Censo</span>
+      <span style="font-size:0.72rem;font-weight:400;color:var(--cinza);">Salvo automaticamente ao clicar em Registrar Plantão</span>
     </div>
     <div id="censo-aviso" class="prod-bloqueado" style="display:none;">
       <span>🔒</span><span id="censo-aviso-txt"></span>
@@ -411,7 +411,6 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
       <div class="prod-item"><label>😷 VNI</label><input type="number" id="cs-vni" min="0" value="0"></div>
       <div class="prod-item"><label>🚨 Isolamento</label><input type="number" id="cs-isolamento" min="0" value="0"></div>
     </div>
-    <button class="btn-salvar" id="btn-salvar-censo" onclick="salvarCenso()" style="background:var(--verde);">🏥 Registrar Censo</button>
   </div>
 
   <button class="btn-salvar" id="btn-salvar" onclick="salvar()">💾 Registrar Plantão</button>
@@ -998,6 +997,16 @@ async function salvar() {
   btn.disabled=true; btn.textContent='Salvando...';
   try {
     await setDoc(doc(db,'plantoes',key),reg);
+    // Salva censo junto, se tiver algum dado preenchido
+    const dadosCenso={key, data, turno};
+    CAMPOS_CENSO.forEach(c=>{ dadosCenso[c]=parseInt(document.getElementById('cs-'+c).value)||0; });
+    dadosCenso.totalInternados=CAMPOS_CENSO_INT.reduce((s,c)=>s+dadosCenso[c],0);
+    const temCenso=CAMPOS_CENSO.some(c=>dadosCenso[c]>0);
+    if(temCenso){
+      const jaExisteCenso=(await getDoc(doc(db,'censo',key))).exists();
+      dadosCenso[jaExisteCenso?'editadoEm':'registradoEm']=new Date().toISOString();
+      await setDoc(doc(db,'censo',key),dadosCenso);
+    }
     abrirModalConfirmacao(reg);
   } catch(e){ toast('❌ '+e.message,'#E53E3E'); btn.disabled=false; btn.textContent='💾 Registrar Plantão'; }
 }
@@ -1180,7 +1189,20 @@ function gerarTextoWA(r) {
     txt+=`*P3 Manhã:* ${p3.manha?.nome?nomeWA(p3.manha.nome,'medico'):'—'}${p3.manha?.obs?' ('+p3.manha.obs+')':''}\n`;
     txt+=`*P3 Tarde:* ${p3.tarde?.nome?nomeWA(p3.tarde.nome,'medico'):'—'}${p3.tarde?.obs?' ('+p3.tarde.obs+')':''}\n\n`;
   }
-  if(r.obs) txt+=`*Obs:* ${r.obs}\n`;
+  if(r.obs) txt+=`*Obs:* ${r.obs}\n\n`;
+  // Censo do plantão
+  const censo=censos.find(c=>c.key===r.key);
+  if(censo){
+    txt+=`*🏥 CENSO DO PLANTÃO*\n`;
+    txt+=`*Internados:* Nemo ${censo.nemo||0} · Dory ${censo.dory||0} · Sala Verm. ${censo.vermelha||0} · *Total: ${censo.totalInternados||0}*\n`;
+    txt+=`*Ag. Regulação:* ${censo.regulacao||0}\n`;
+    const suporte=[];
+    if(censo.intubados) suporte.push(`Intubados: ${censo.intubados}`);
+    if(censo.cpap) suporte.push(`CPAP: ${censo.cpap}`);
+    if(censo.vni) suporte.push(`VNI: ${censo.vni}`);
+    if(censo.isolamento) suporte.push(`Isolamento: ${censo.isolamento}`);
+    if(suporte.length) txt+=`*Suporte:* ${suporte.join(' · ')}\n`;
+  }
   return txt;
 }
 
