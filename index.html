@@ -1498,11 +1498,11 @@ async function carregarUsuarios() {
   el.innerHTML = snap.docs.map(d=>{
     const u=d.data();
     const isMaster = u.email === EMAIL_MASTER;
+    if(isMaster) return ''; // conta master não aparece na lista
     return `<div class="prof-item">
-      <span class="prof-item-nome">${u.nome} ${isMaster?'🛡️':''}</span>
-      <span style="font-size:0.75rem;color:var(--cinza);">${u.email}</span>
+      <span class="prof-item-nome">${u.nome}</span>
       <span class="${u.perfil==='admin'?'badge-ativo':'badge-inativo'}">${u.perfil==='admin'?'Admin':'Recepção'}</span>
-      ${isMaster ? '<span style="font-size:0.72rem;color:var(--cinza);">Master</span>' : `<button class="btn-excluir-p" onclick="removerUsuario('${d.id}','${u.email}','${u.nome.replace(/'/g,"\\'")}')">🗑️</button>`}
+      <button class="btn-excluir-p" onclick="removerUsuario('${d.id}','${u.email}','${u.nome.replace(/'/g,"\\'")}')">🗑️</button>
     </div>`;
   }).join('');
 }
