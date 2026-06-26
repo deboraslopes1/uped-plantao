@@ -329,7 +329,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
   <button class="tab-btn" onclick="switchTab('registrar')">✏️ Registrar Plantão</button>
   <button class="tab-btn" id="tab-consultar" onclick="switchTab('consultar')">📋 Consultar Plantões</button>
   <button class="tab-btn" onclick="switchTab('producao')">📊 Registro de Produção</button>
-  <button class="tab-btn" onclick="switchTab('gestao')">📈 Gestão</button>
+  <button class="tab-btn" onclick="switchTab('gestao')">📊 Relatórios</button>
   <button class="tab-btn" id="tab-admin" onclick="switchTab('admin')" style="display:none;">⚙️ Painel Admin</button>
 </div>
 
@@ -913,7 +913,7 @@ function renderCatBody(catId) {
   body.innerHTML='';
   const ativos=profsAtivos(catId);
   if(ativos.length===0){
-    body.innerHTML=`<div class="sem-cadastro">⚠️ Nenhum profissional cadastrado nesta categoria.<br><small>Acesse <strong>Gestão &gt; Equipe</strong> para adicionar.</small></div>`;
+    body.innerHTML=`<div class="sem-cadastro">⚠️ Nenhum profissional cadastrado nesta categoria.<br><small>Acesse <strong>Painel Admin</strong> para adicionar.</small></div>`;
     return;
   }
   (estado[catId]||[{nome:'',turno:turnoPlantao(),obs:''}]).forEach((slot,i)=>{
@@ -1464,23 +1464,26 @@ window.fazerLogout = async function() {
   await signOut(auth);
 };
 
+let _sistemaInicializado = false;
+
 // Listener de autenticação — ponto central de controle
 onAuthStateChanged(auth, async user => {
   if(!user) {
-    // Não logado — mostra tela de login
     usuarioAtual = null;
+    _sistemaInicializado = false;
+    const btn = document.getElementById('btn-login');
+    if(btn){ btn.disabled=false; btn.textContent='Entrar'; }
+    document.getElementById('login-erro').textContent='';
     document.getElementById('tela-login').style.display='flex';
     document.getElementById('loading').style.display='none';
     document.getElementById('header-usuario').style.display='none';
     return;
   }
-  // Logado — busca perfil no Firestore
   document.getElementById('tela-login').style.display='none';
   const perfilSnap = await getDoc(doc(db,'usuarios',user.uid));
   const perfil = perfilSnap.exists() ? perfilSnap.data().perfil : 'recepcao';
   const nome = user.displayName || user.email.split('@')[0];
   usuarioAtual = { uid:user.uid, email:user.email, nome, perfil };
-  // Atualiza header
   document.getElementById('header-usuario').style.display='flex';
   document.getElementById('header-nome').textContent = nome;
   document.getElementById('header-perfil').textContent = perfil==='admin' ? '🔑 Administrador' : '👩‍💻 Recepção';
@@ -1488,10 +1491,14 @@ onAuthStateChanged(auth, async user => {
   if(btnLogout) btnLogout.onclick = window.fazerLogout;
   const btnAlterarSenha = document.getElementById('btn-alterar-senha');
   if(btnAlterarSenha) btnAlterarSenha.onclick = ()=>{ document.getElementById('modal-alterar-senha').classList.remove('hidden'); document.getElementById('as-atual').focus(); };
-  // Aplica restrições de acesso
   aplicarPermissoes(perfil);
-  // Inicializa sistema
-  inicializarSistema();
+  if(!_sistemaInicializado){
+    _sistemaInicializado = true;
+    inicializarSistema();
+  } else {
+    // Re-login (ex: troca de usuário) — reaplica permissões e volta ao início
+    switchTab('inicio');
+  }
 });
 
 // ===== GERENCIAR USUÁRIOS =====
@@ -1609,23 +1616,23 @@ function aplicarPermissoes(perfil) {
   const tabAdmin = document.getElementById('tab-admin');
   if(tabAdmin) tabAdmin.style.display = adm ? '' : 'none';
 
-  // Cards do Início conforme perfil
-  const todosCards = [
-    { tab:'registrar', icon:'✏️', titulo:'Registrar Plantão',     desc:'Cadastre a escala do plantão atual com toda a equipe' },
-    { tab:'consultar', icon:'📋', titulo:'Consultar Plantões',     desc:'Visualize e filtre os plantões registrados' },
-    { tab:'producao',  icon:'📊', titulo:'Registro de Produção',   desc:'Registre os atendimentos ao final de cada plantão' },
-    { tab:'gestao',    icon:'📈', titulo:'Gestão',                 desc:'Dashboard, histórico de produção e censo', adminOnly:true },
-    { tab:'admin',     icon:'⚙️', titulo:'Painel Admin',           desc:'Usuários e profissionais da equipe', adminOnly:true },
-  ];
+  // Cards só para Recepção — admin já tem abas no topo
   const cardsEl = document.getElementById('inicio-cards');
   if(cardsEl){
-    cardsEl.innerHTML = todosCards
-      .filter(c => !c.adminOnly || adm)
-      .map(c=>`<div class="inicio-card" onclick="switchTab('${c.tab}')">
+    if(adm){
+      cardsEl.style.display='none';
+    } else {
+      cardsEl.style.display='grid';
+      cardsEl.innerHTML = [
+        { tab:'registrar', icon:'✏️', titulo:'Registrar Plantão',   desc:'Cadastre a escala do plantão atual' },
+        { tab:'consultar', icon:'📋', titulo:'Consultar Plantões',   desc:'Visualize os plantões registrados' },
+        { tab:'producao',  icon:'📊', titulo:'Registro de Produção', desc:'Registre os atendimentos do plantão' },
+      ].map(c=>`<div class="inicio-card" onclick="switchTab('${c.tab}')">
         <div class="inicio-card-icon">${c.icon}</div>
         <div class="inicio-card-titulo">${c.titulo}</div>
         <div class="inicio-card-desc">${c.desc}</div>
       </div>`).join('');
+    }
   }
 }
 
@@ -2066,11 +2073,19 @@ async function verificarBloqueoCenso(){
   const btn=document.getElementById('btn-salvar-censo');
   if(snap.exists()){
     const d=snap.data();
-    aviso.style.display='flex';
-    document.getElementById('censo-aviso-txt').textContent=`Censo registrado em ${new Date(d.registradoEm).toLocaleString('pt-BR')}${d.editadoEm?' · editado em '+new Date(d.editadoEm).toLocaleString('pt-BR'):''}. Bloqueado.`;
-    campos.forEach(el=>el.disabled=true); btn.disabled=true;
     CAMPOS_CENSO.forEach(c=>{ const el=document.getElementById('cs-'+c.replace('_','-')); if(el) el.value=d[c]||0; });
     calcTotalInternados();
+    if(isAdmin()){
+      // Admin: carrega dados mas mantém editável
+      aviso.style.display='none';
+      campos.forEach(el=>el.disabled=false); btn.disabled=false;
+      btn.textContent='💾 Atualizar Censo';
+    } else {
+      // Recepção: bloqueia após envio
+      aviso.style.display='flex';
+      document.getElementById('censo-aviso-txt').textContent=`Censo registrado em ${new Date(d.registradoEm).toLocaleString('pt-BR')}${d.editadoEm?' · editado':''}.`;
+      campos.forEach(el=>el.disabled=true); btn.disabled=true;
+    }
   } else {
     aviso.style.display='none';
     campos.forEach(el=>el.disabled=false); btn.disabled=false;
@@ -2079,17 +2094,16 @@ async function verificarBloqueoCenso(){
     calcTotalInternados();
   }
 }
-// Censo sincroniza com f-data/f-turno do formulário principal
-// (verificarBloqueoCenso é chamado por carregarPlantao)
 
 window.editarCenso=()=>{
-  abrirSenha('✏️ Editar Censo','Informe a senha de supervisor para editar este registro.',()=>{
+  // Só recepção precisa do botão editar — admin já tem acesso direto
+  if(isAdmin()) return;
+  abrirSenha('✏️ Editar Censo','',()=>{
     const campos=document.querySelectorAll('#censo-campos-internados input,#censo-campos-clinica input');
     campos.forEach(el=>el.disabled=false);
     document.getElementById('btn-salvar-censo').disabled=false;
     document.getElementById('btn-salvar-censo').textContent='💾 Salvar Edição';
     document.getElementById('censo-aviso-txt').textContent='✏️ Modo edição — salve ao concluir.';
-    toast('🔓 Edição liberada.','#F59E0B');
   });
 };
 
