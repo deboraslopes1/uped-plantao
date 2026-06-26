@@ -1451,15 +1451,6 @@ onAuthStateChanged(auth, async user => {
   inicializarSistema();
 });
 
-function aplicarPermissoes(perfil) {
-  const isAdmin = perfil === 'admin';
-  // Aba Gestão — só admin
-  const tabGestao = document.querySelector('[onclick="switchTab(\'gestao\')"]');
-  if(tabGestao) tabGestao.style.display = isAdmin ? '' : 'none';
-  // Botões de editar/excluir em consulta — só admin (aplicado no render)
-  window._isAdmin = isAdmin;
-}
-
 // ===== GERENCIAR USUÁRIOS =====
 window.criarUsuario = async function() {
   const email = document.getElementById('nu-email').value.trim();
