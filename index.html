@@ -305,19 +305,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
   </div>
 </div>
 
-<!-- MODAL SENHA SUPERVISOR -->
-<div class="modal-senha-overlay hidden" id="modal-senha-gen">
-  <div class="modal-senha-box">
-    <h3 id="modal-senha-titulo">🔐 Área restrita</h3>
-    <p id="modal-senha-desc">Informe a senha de supervisor para continuar.</p>
-    <input type="password" id="modal-senha-input" placeholder="Senha de supervisor">
-    <div class="senha-erro" id="modal-senha-erro"></div>
-    <div class="modal-senha-btns">
-      <button class="btn-senha-cancel" onclick="fecharModalSenha()">Cancelar</button>
-      <button class="btn-senha-ok" onclick="confirmarModalSenha()">Confirmar</button>
-    </div>
-  </div>
-</div>
+<!-- modal senha removido — controle por login admin -->
 
 
 <header>
@@ -341,6 +329,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
   <button class="tab-btn" id="tab-consultar" onclick="switchTab('consultar')">📋 Consultar Plantões</button>
   <button class="tab-btn" onclick="switchTab('producao')">📊 Registro de Produção</button>
   <button class="tab-btn" onclick="switchTab('gestao')">📈 Gestão</button>
+  <button class="tab-btn" id="tab-admin" onclick="switchTab('admin')" style="display:none;">⚙️ Painel Admin</button>
 </div>
 
 <!-- ===== INÍCIO ===== -->
@@ -546,7 +535,6 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
     <button class="btn-view active" id="gtab-dash" onclick="switchGestao('dash')">📈 Dashboard</button>
     <button class="btn-view" id="gtab-hist" onclick="switchGestao('hist')">📊 Histórico de Produção</button>
     <button class="btn-view" id="gtab-censo" onclick="switchGestao('censo')">🏥 Censo do Plantão</button>
-    <button class="btn-view" id="gtab-equipe" onclick="switchGestao('equipe')">👥 Equipe</button>
   </div>
 
   <!-- Dashboard -->
@@ -608,52 +596,56 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
     </div>
   </div>
 
-  <!-- Equipe -->
-  <div id="gsec-equipe" style="display:none;">
-    <!-- Gerenciar Usuários -->
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-title" style="display:block;">🔑 Gerenciar Usuários</div>
-      <p style="font-size:0.83rem;color:var(--cinza);margin-bottom:14px;">Usuários com perfil <strong>Admin</strong> têm acesso completo. <strong>Recepção</strong> acessa apenas Registrar Plantão, Consultar e Produção.</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
-        <input type="text" id="nu-nome" placeholder="Nome completo" style="flex:2;min-width:140px;">
-        <input type="email" id="nu-email" placeholder="E-mail" style="flex:2;min-width:160px;">
-        <input type="password" id="nu-senha" placeholder="Senha (mín. 6)" style="flex:1;min-width:120px;">
-        <select id="nu-perfil" style="flex:1;min-width:120px;">
-          <option value="recepcao">Recepção</option>
-          <option value="admin">Administrador</option>
-        </select>
-        <button class="btn-add-prof" onclick="criarUsuario()">+ Criar</button>
-      </div>
-      <div class="prof-erro" id="nu-erro"></div>
-      <div id="lista-usuarios"></div>
+
+</div>
+
+<!-- ===== PAINEL ADMIN ===== -->
+<div class="tab-panel" id="panel-admin">
+  <!-- Usuários -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title" style="display:block;">🔑 Usuários do Sistema</div>
+    <p style="font-size:0.83rem;color:var(--cinza);margin-bottom:14px;"><strong>Admin</strong> — acesso completo. <strong>Recepção</strong> — Registrar, Consultar e Produção apenas.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+      <input type="text" id="nu-nome" placeholder="Nome completo" style="flex:2;min-width:140px;">
+      <input type="email" id="nu-email" placeholder="E-mail" style="flex:2;min-width:160px;">
+      <input type="password" id="nu-senha" placeholder="Senha (mín. 6)" style="flex:1;min-width:120px;">
+      <select id="nu-perfil" style="flex:1;min-width:120px;">
+        <option value="recepcao">Recepção</option>
+        <option value="admin">Administrador</option>
+      </select>
+      <button class="btn-add-prof" id="btn-criar-usuario">+ Criar usuário</button>
     </div>
-    <!-- Gerenciar Profissionais -->
-    <div class="card">
-      <div class="card-title" style="display:block;">👥 Gerenciar Profissionais</div>
-      <p style="font-size:0.83rem;color:var(--cinza);margin-bottom:14px;">P3 e Evolução usam automaticamente os profissionais cadastrados em <strong>Médicos Plantonistas</strong>.</p>
-      <div class="add-prof-row">
-        <select id="new-prof-cat" onchange="renderListaProfs()">
-          <option value="recepcao">👩‍💻 Recepção</option>
-          <option value="portaria">🫸🏻 Ag. de Portaria</option>
-          <option value="maqueiro">🧑‍🦽 Maqueiro</option>
-          <option value="motorista">🚑 Motorista</option>
-          <option value="cozinheira">👩🏻‍🍳 Cozinheira</option>
-          <option value="asg">🚮 ASG</option>
-          <option value="copa">🛎️ Copa</option>
-          <option value="farmacia">💊 Farmácia</option>
-          <option value="social">👩‍🏫 Serviço Social</option>
-          <option value="tec_enf">👩🏻‍⚕️ Téc. Enfermagem</option>
-          <option value="enfermeiro">🩺 Enfermeiros(as)</option>
-          <option value="medico">👨‍⚕️ Médicos Plantonistas</option>
-          <option value="fisio">🦺 Fisioterapeuta</option>
-        </select>
-        <input type="text" id="new-prof-nome" placeholder="Nome completo do profissional">
-        <button class="btn-add-prof" onclick="adicionarProfissional()">+ Adicionar</button>
-      </div>
-      <div class="prof-erro" id="prof-erro"></div>
-    </div>
-    <div id="lista-profs-equipe"></div>
+    <div class="prof-erro" id="nu-erro"></div>
+    <div id="lista-usuarios"></div>
   </div>
+  <!-- Profissionais -->
+  <div class="card">
+    <div class="card-title" style="display:block;">👥 Profissionais da Equipe</div>
+    <p style="font-size:0.83rem;color:var(--cinza);margin-bottom:14px;">P3 e Evolução usam automaticamente os profissionais de <strong>Médicos Plantonistas</strong>.</p>
+    <div class="add-prof-row">
+      <select id="new-prof-cat" onchange="renderListaProfs()">
+        <option value="recepcao">👩‍💻 Recepção</option>
+        <option value="portaria">🫸🏻 Ag. de Portaria</option>
+        <option value="maqueiro">🧑‍🦽 Maqueiro</option>
+        <option value="motorista">🚑 Motorista</option>
+        <option value="cozinheira">👩🏻‍🍳 Cozinheira</option>
+        <option value="asg">🚮 ASG</option>
+        <option value="copa">🛎️ Copa</option>
+        <option value="farmacia">💊 Farmácia</option>
+        <option value="nutricionista">🥗 Nutricionista</option>
+        <option value="farmaceutico">⚗️ Farmacêutico</option>
+        <option value="social">👩‍🏫 Serviço Social</option>
+        <option value="tec_enf">👩🏻‍⚕️ Téc. Enfermagem</option>
+        <option value="enfermeiro">🩺 Enfermeiros(as)</option>
+        <option value="medico">👨‍⚕️ Médicos Plantonistas</option>
+        <option value="fisio">🦺 Fisioterapeuta</option>
+      </select>
+      <input type="text" id="new-prof-nome" placeholder="Nome completo do profissional">
+      <button class="btn-add-prof" onclick="adicionarProfissional()">+ Adicionar</button>
+    </div>
+    <div class="prof-erro" id="prof-erro"></div>
+  </div>
+  <div id="lista-profs-equipe"></div>
 </div>
 
 <!-- MODAL CONFIRMAÇÃO PÓS-SALVAR -->
@@ -715,7 +707,13 @@ const auth = getAuth(app);
 let usuarioAtual = null; // { uid, email, displayName, perfil }
 
 // ===== CONSTANTES =====
-const SENHA = 'uped2026';
+const EMAIL_MASTER = 'deboraslopes1@gmail.com'; // conta indeletável
+function isAdmin(){ return usuarioAtual?.perfil === 'admin'; }
+window.abrirSenha = function(titulo, desc, cb) {
+  if(!isAdmin()){ toast('⚠️ Acesso restrito a administradores.','#E53E3E'); return; }
+  if(cb) cb();
+};
+
 const TURNOS_PROF = [
   { v:'DIURNO', l:'☀️ Diurno' },
   { v:'NOTURNO', l:'🌙 Noturno' },
@@ -764,7 +762,7 @@ let producoes     = [];   // docs de producao
 let estado        = {};   // { catId: [{nome,turno,obs}] }
 let editKey       = null;
 let keyExcluir    = null;
-let senhaCallback = null;
+// senhaCallback removido — controle por login
 let prodBloqueado = false;
 let chartProd     = null;
 let chartEv       = null;
@@ -783,26 +781,6 @@ function toast(msg, bg) {
   t.textContent=msg; t.style.background=bg||'var(--verde)';
   t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200);
 }
-
-// ===== MODAL SENHA GENÉRICO =====
-window.abrirSenha = function(titulo, desc, cb) {
-  senhaCallback = cb;
-  document.getElementById('modal-senha-titulo').textContent = titulo;
-  document.getElementById('modal-senha-desc').textContent   = desc;
-  document.getElementById('modal-senha-input').value = '';
-  document.getElementById('modal-senha-erro').textContent   = '';
-  document.getElementById('modal-senha-gen').classList.remove('hidden');
-  setTimeout(()=>document.getElementById('modal-senha-input').focus(),100);
-};
-window.fecharModalSenha = ()=>document.getElementById('modal-senha-gen').classList.add('hidden');
-window.confirmarModalSenha = function() {
-  if (document.getElementById('modal-senha-input').value !== SENHA) {
-    document.getElementById('modal-senha-erro').textContent='❌ Senha incorreta.'; return;
-  }
-  fecharModalSenha();
-  if (senhaCallback) { senhaCallback(); senhaCallback=null; }
-};
-document.getElementById('modal-senha-input').addEventListener('keydown',e=>{if(e.key==='Enter')confirmarModalSenha();});
 
 // ===== PROFISSIONAIS =====
 onSnapshot(collection(db,'profissionais'), snap=>{
@@ -1522,25 +1500,27 @@ window.criarUsuario = async function() {
 async function carregarUsuarios() {
   const el = document.getElementById('lista-usuarios');
   if(!el) return;
-  const snap = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js')
-    .then(m=>m.getDocs(m.collection(db,'usuarios')));
+  const {getDocs, collection:col} = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+  const snap = await getDocs(col(db,'usuarios'));
   if(snap.empty){ el.innerHTML='<p style="font-size:0.83rem;color:var(--cinza);padding:12px;">Nenhum usuário cadastrado ainda.</p>'; return; }
   el.innerHTML = snap.docs.map(d=>{
     const u=d.data();
+    const isMaster = u.email === EMAIL_MASTER;
     return `<div class="prof-item">
-      <span class="prof-item-nome">${u.nome}</span>
+      <span class="prof-item-nome">${u.nome} ${isMaster?'🛡️':''}</span>
       <span style="font-size:0.75rem;color:var(--cinza);">${u.email}</span>
       <span class="${u.perfil==='admin'?'badge-ativo':'badge-inativo'}">${u.perfil==='admin'?'Admin':'Recepção'}</span>
-      <button class="btn-excluir-p" onclick="removerUsuario('${d.id}','${u.nome.replace(/'/g,"\\'")}')">🗑️</button>
+      ${isMaster ? '<span style="font-size:0.72rem;color:var(--cinza);">Master</span>' : `<button class="btn-excluir-p" onclick="removerUsuario('${d.id}','${u.email}','${u.nome.replace(/'/g,"\\'")}')">🗑️</button>`}
     </div>`;
   }).join('');
 }
 window.carregarUsuarios=carregarUsuarios;
 
-window.removerUsuario = async function(uid, nome) {
+window.removerUsuario = async function(uid, email, nome) {
+  if(email === EMAIL_MASTER){ toast('⚠️ Esta conta não pode ser removida.','#E53E3E'); return; }
   if(!confirm(`Remover usuário "${nome}"?`)) return;
   await deleteDoc(doc(db,'usuarios',uid));
-  toast('🗑️ Usuário removido. Senha ainda válida no Auth — remova manualmente no Firebase Console se necessário.');
+  toast('🗑️ Usuário removido.');
   carregarUsuarios();
 };
 
@@ -1548,19 +1528,18 @@ function inicializarSistema() {
   document.getElementById('f-data').valueAsDate=new Date();
   document.getElementById('fp-data').valueAsDate=new Date();
   aplicarPeriodoPadrao();
+  // Listener botão criar usuário
+  const btnCriar = document.getElementById('btn-criar-usuario');
+  if(btnCriar) btnCriar.addEventListener('click', window.criarUsuario);
   initEstado();
   rebuildarForm();
   switchTab('inicio');
 }
 window.switchTab=function(tab, semSenha){
-  if(tab==='gestao' && !semSenha){
-    // Gestão é livre — só Equipe dentro dela pede senha
-  }
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  const tabs={inicio:0,registrar:1,consultar:2,producao:3,gestao:4};
-  const idx=tabs[tab];
-  if(idx!==undefined) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  const tabEl = document.querySelector(`[onclick="switchTab('${tab}')"]`);
+  if(tabEl) tabEl.classList.add('active');
   const panel=document.getElementById('panel-'+tab);
   if(panel) panel.classList.add('active');
   if(tab==='inicio') renderInicio();
@@ -1570,26 +1549,32 @@ window.switchTab=function(tab, semSenha){
   }
   if(tab==='producao'){ verificarBloqueio(); }
   if(tab==='gestao'){ renderDashboard(); filtrarProducao(); }
+  if(tab==='admin'){ carregarUsuarios(); renderListaProfs(); }
 };
 
 window.switchGestao=function(sec){
-  ['dash','hist','censo','equipe'].forEach(s=>{
+  ['dash','hist','censo'].forEach(s=>{
     const tab=document.getElementById('gtab-'+s);
     const gsec=document.getElementById('gsec-'+s);
     if(tab) tab.classList.toggle('active',s===sec);
     if(gsec) gsec.style.display=s===sec?'block':'none';
   });
   aplicarPeriodoPadrao();
-  if(sec==='equipe'){
-    abrirSenha('👥 Gerenciar Equipe','Informe a senha de supervisor para acessar o gerenciamento de profissionais.',()=>{
-      renderListaProfs();
-      carregarUsuarios();
-    });
-  }
   if(sec==='dash') renderDashboard();
   if(sec==='hist') filtrarProducao();
   if(sec==='censo'){ verificarBloqueoCenso(); filtrarCenso(); }
 };
+
+function aplicarPermissoes(perfil) {
+  const isAdm = perfil === 'admin';
+  window._isAdmin = isAdm;
+  // Aba Gestão — só admin
+  const tabGestao = document.querySelector('[onclick="switchTab(\'gestao\')"]');
+  if(tabGestao) tabGestao.style.display = isAdm ? '' : 'none';
+  // Aba Painel Admin — só admin
+  const tabAdmin = document.getElementById('tab-admin');
+  if(tabAdmin) tabAdmin.style.display = isAdm ? '' : 'none';
+}
 
 function renderInicio(){
   const hoje = new Date().toISOString().slice(0,10);
