@@ -1524,7 +1524,7 @@ onAuthStateChanged(auth, async user => {
   document.getElementById('tela-login').style.display='none';
   const perfilSnap = await getDoc(doc(db,'usuarios',user.uid));
   const perfil = perfilSnap.exists() ? perfilSnap.data().perfil : 'recepcao';
-  const nome = user.displayName || user.email.split('@')[0];
+  const nome = perfilSnap.exists() && perfilSnap.data().nome ? perfilSnap.data().nome : (user.displayName || user.email.split('@')[0]);
   usuarioAtual = { uid:user.uid, email:user.email, nome, perfil };
   document.getElementById('header-usuario').style.display='flex';
   document.getElementById('header-nome').textContent = nome;
@@ -1969,12 +1969,12 @@ window.compartilharWAProd = function(d) {
   const ds=DIAS[new Date(d.data+'T12:00:00').getDay()];
   let txt=`*PRODUÇÃO DO PLANTÃO*\n*${dd}/${m}/${a} — ${ds} · ${d.turno}*\n\n`;
   txt+=`*Total de atendimentos: ${d.total||0}*\n\n`;
-  txt+=`*Fichas:*\n🔵 Azul: ${d.azul||0}  🟢 Verde: ${d.verde||0}  🟡 Amarela: ${d.amarela||0}  🔴 Vermelha: ${d.vermelha||0}\n\n`;
+  txt+=`*Fichas:*\nAzul: ${d.azul||0}  Verde: ${d.verde||0}  Amarela: ${d.amarela||0}  Vermelha: ${d.vermelha||0}\n\n`;
   txt+=`*Complementares:*\n`;
-  txt+=`🤧 Sint. Gripais: ${d.gripais||0} · 🪡 Sutura: ${d.sutura||0}\n`;
-  txt+=`🛏️ Internamento: ${d.internamento||0} · ✅ Alta: ${d.alta||0} · 🚪 Evasão: ${d.evasao||0}\n`;
-  txt+=`🚑 Transferência: ${d.transferencia||0} · ⚫ Óbito: ${d.obito||0}\n`;
-  txt+=`🩻 Raio-X: ${d.raiox||0} · 🧪 Laboratório: ${d.laboratorio||0}\n`;
+  txt+=`Sint. Gripais: ${d.gripais||0} · Sutura: ${d.sutura||0}\n`;
+  txt+=`Internamento: ${d.internamento||0} · Alta: ${d.alta||0} · Evasão: ${d.evasao||0}\n`;
+  txt+=`Transferência: ${d.transferencia||0} · Óbito: ${d.obito||0}\n`;
+  txt+=`Raio-X: ${d.raiox||0} · Laboratório: ${d.laboratorio||0}\n`;
   if(usuarioAtual) txt+=`\n_Registrado por: ${usuarioAtual.nome}_`;
   window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
 };
@@ -2030,14 +2030,13 @@ function renderHistProd(l){
   }).join('');
 }
 window.excluirProducao=function(key, dataFmt, turno){
-  abrirSenha('🗑️ Excluir Produção',`Informe a senha de supervisor para excluir o registro de ${dataFmt} — ${turno}.`,async()=>{
-    try{
-      await deleteDoc(doc(db,'producao',key));
+  if(!confirm(`Excluir produção de ${dataFmt} — ${turno}?\nEsta ação não pode ser desfeita.`)) return;
+  deleteDoc(doc(db,'producao',key))
+    .then(async()=>{
       toast('🗑️ Registro de produção excluído.');
-      // Se era o registro aberto no formulário, recarrega
       if(chaveProd()===key) await verificarBloqueio();
-    } catch(e){ toast('❌ '+e.message,'#E53E3E'); }
-  });
+    })
+    .catch(e=>toast('❌ '+e.message,'#E53E3E'));
 };
 window.toggleProdCard=function(h){ const b=h.nextElementSibling; b.classList.toggle('open'); h.querySelector('.chevron').classList.toggle('open',b.classList.contains('open')); };
 
