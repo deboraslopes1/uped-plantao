@@ -507,6 +507,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
       <div class="prod-item"><label>🧪 Laboratório</label><input type="number" id="p-laboratorio" min="0" value="0"></div>
     </div>
     <button class="btn-salvar" id="btn-salvar-prod" onclick="salvarProducao()">💾 Registrar Produção</button>
+    <button id="btn-wa-prod" onclick="compartilharWAProd()" style="display:none;margin-top:8px;width:100%;padding:12px;background:#25D366;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;">📲 Enviar Produção no WhatsApp</button>
   </div>
 </div>
 
@@ -1862,7 +1863,10 @@ window.exportarPDFCenso=function(){
 onSnapshot(query(collection(db,'producao'),orderBy('data','desc')),snap=>{
   producoes=snap.docs.map(d=>({...d.data(),key:d.id}));
   const panel=document.getElementById('panel-producao');
-  if(panel.classList.contains('active')){ verificarBloqueio(); filtrarProducao(); }
+  if(panel?.classList.contains('active')){ verificarBloqueio(); }
+  // Atualiza histórico se sub-aba hist estiver ativa
+  const gsecHist=document.getElementById('gsec-hist');
+  if(gsecHist?.style.display!=='none') filtrarProducao();
 });
 
 CAMPOS_FICHAS.forEach(c=>{
@@ -1919,6 +1923,10 @@ async function salvarProducao(){
   try{
     await setDoc(doc(db,'producao',chave),dados);
     toast('✅ Produção registrada!');
+    // Mostra botão WhatsApp com os dados recém salvos
+    window._ultimaProd = dados;
+    const btnWA = document.getElementById('btn-wa-prod');
+    if(btnWA) btnWA.style.display='block';
     // Avança turno
     const dt=document.getElementById('fp-data').value; const tr=document.getElementById('fp-turno').value;
     if(tr==='NOTURNO'){ const d=new Date(dt+'T12:00:00'); d.setDate(d.getDate()+1); document.getElementById('fp-data').value=d.toISOString().slice(0,10); document.getElementById('fp-turno').value='DIURNO'; }
@@ -1927,6 +1935,25 @@ async function salvarProducao(){
   } catch(e){ toast('❌ '+e.message,'#E53E3E'); btn.disabled=false; btn.textContent='💾 Registrar Produção'; }
 }
 window.salvarProducao=salvarProducao;
+
+window.compartilharWAProd = function() {
+  const d = window._ultimaProd; if(!d) return;
+  const [a,m,dd]=d.data.split('-');
+  const ds=DIAS[new Date(d.data+'T12:00:00').getDay()];
+  let txt=`*PRODUÇÃO DO PLANTÃO*\n*${dd}/${m}/${a} — ${ds} · ${d.turno}*\n\n`;
+  txt+=`*Total de atendimentos: ${d.total||0}*\n\n`;
+  txt+=`*Fichas:*\n`;
+  txt+=`🔵 Azul: ${d.azul||0}  🟢 Verde: ${d.verde||0}  🟡 Amarela: ${d.amarela||0}  🔴 Vermelha: ${d.vermelha||0}\n\n`;
+  txt+=`*Complementares:*\n`;
+  txt+=`🤧 Sint. Gripais: ${d.gripais||0}\n`;
+  txt+=`🪡 Sutura: ${d.sutura||0}\n`;
+  txt+=`🛏️ Internamento: ${d.internamento||0}\n`;
+  txt+=`✅ Alta: ${d.alta||0}  🚪 Evasão: ${d.evasao||0}\n`;
+  txt+=`🚑 Transferência: ${d.transferencia||0}  ⚫ Óbito: ${d.obito||0}\n`;
+  txt+=`🩻 Raio-X: ${d.raiox||0}  🧪 Laboratório: ${d.laboratorio||0}\n`;
+  if(usuarioAtual) txt+=`\n_Registrado por: ${usuarioAtual.nome}_`;
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+};
 
 function getProdFiltradas(){
   const ini=document.getElementById('rp-ini').value; const fim=document.getElementById('rp-fim').value; const trn=document.getElementById('rp-turno').value;
@@ -2213,10 +2240,20 @@ function renderHistCenso(l){
         <div class="prod-num-grid">${itensInt}</div>
         <div style="font-size:0.72rem;font-weight:700;color:var(--azul);text-transform:uppercase;margin:10px 0 6px;">Situação Clínica</div>
         <div class="prod-num-grid">${itensClin}</div>
+        ${window._isAdmin?`<div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--cinza-borda);">
+          <button onclick="excluirCenso('${r.key}','${d}/${m}/${a}','${r.turno}')" style="padding:5px 12px;background:white;color:var(--cinza);border:1.5px solid var(--cinza-borda);border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#FEE2E2';this.style.color='var(--vermelho)';this.style.borderColor='#FECACA'" onmouseout="this.style.background='white';this.style.color='var(--cinza)';this.style.borderColor='var(--cinza-borda)'">🗑️ Excluir censo</button>
+        </div>`:''}
       </div>
     </div>`;
   }).join('');
 }
+
+window.excluirCenso=function(key, dataFmt, turno){
+  if(!confirm(`Excluir censo de ${dataFmt} — ${turno}? Esta ação não pode ser desfeita.`)) return;
+  deleteDoc(doc(db,'censo',key))
+    .then(()=>{ toast('🗑️ Censo excluído.'); verificarBloqueoCenso(); })
+    .catch(e=>toast('❌ '+e.message,'#E53E3E'));
+};
 
 // ===== INIT =====
 if ('serviceWorker' in navigator) {
