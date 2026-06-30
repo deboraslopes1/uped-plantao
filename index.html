@@ -1977,6 +1977,7 @@ window.compartilharWAProd = function(d) {
   txt+=`🩻 Raio-X: ${d.raiox||0} · 🧪 Laboratório: ${d.laboratorio||0}\n`;
   if(usuarioAtual) txt+=`\n_Registrado por: ${usuarioAtual.nome}_`;
   window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+};
 
 function getProdFiltradas(){
   const ini=document.getElementById('rp-ini').value; const fim=document.getElementById('rp-fim').value; const trn=document.getElementById('rp-turno').value;
