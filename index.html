@@ -507,7 +507,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
       <div class="prod-item"><label>🧪 Laboratório</label><input type="number" id="p-laboratorio" min="0" value="0"></div>
     </div>
     <button class="btn-salvar" id="btn-salvar-prod" onclick="salvarProducao()">💾 Registrar Produção</button>
-    <button id="btn-wa-prod" onclick="compartilharWAProd()" style="display:none;margin-top:8px;width:100%;padding:12px;background:#25D366;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;">📲 Enviar Produção no WhatsApp</button>
+    <button id="btn-wa-prod" style="display:none;margin-top:8px;width:100%;padding:12px;background:#25D366;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;">📲 Enviar Produção no WhatsApp</button>
   </div>
 </div>
 
@@ -1862,11 +1862,12 @@ window.exportarPDFCenso=function(){
 // ===== PRODUÇÃO =====
 onSnapshot(query(collection(db,'producao'),orderBy('data','desc')),snap=>{
   producoes=snap.docs.map(d=>({...d.data(),key:d.id}));
-  const panel=document.getElementById('panel-producao');
-  if(panel?.classList.contains('active')){ verificarBloqueio(); }
-  // Atualiza histórico se sub-aba hist estiver ativa
+  // Atualiza formulário de produção se estiver ativo
+  const panelProd=document.getElementById('panel-producao');
+  if(panelProd?.classList.contains('active')) verificarBloqueio();
+  // Atualiza histórico de produção se sub-aba estiver visível
   const gsecHist=document.getElementById('gsec-hist');
-  if(gsecHist?.style.display!=='none') filtrarProducao();
+  if(gsecHist && gsecHist.style.display!=='none') filtrarProducao();
 });
 
 CAMPOS_FICHAS.forEach(c=>{
@@ -1898,8 +1899,9 @@ async function verificarBloqueio(){
     CAMPOS_PROD.forEach(c=>{ const el=document.getElementById('p-'+c); if(el) el.value=0; }); calcTotal();
   }
 }
-document.getElementById('fp-data').addEventListener('change',verificarBloqueio);
-document.getElementById('fp-turno').addEventListener('change',verificarBloqueio);
+document.getElementById('fp-data').addEventListener('change',()=>{ verificarBloqueio(); document.getElementById('btn-wa-prod').style.display='none'; });
+document.getElementById('fp-turno').addEventListener('change',()=>{ verificarBloqueio(); document.getElementById('btn-wa-prod').style.display='none'; });
+document.getElementById('btn-wa-prod').addEventListener('click', window.compartilharWAProd);
 
 window.editarProducao=()=>{
   abrirSenha('✏️ Editar Produção','Informe a senha de supervisor para editar este registro.',()=>{
@@ -2152,25 +2154,26 @@ async function verificarBloqueoCenso(){
   const aviso=document.getElementById('censo-aviso');
   const campos=document.querySelectorAll('#censo-campos-internados input,#censo-campos-clinica input');
   const btn=document.getElementById('btn-salvar-censo');
+  if(!aviso) return; // não está no formulário de registrar, ignora
   if(snap.exists()){
     const d=snap.data();
     CAMPOS_CENSO.forEach(c=>{ const el=document.getElementById('cs-'+c.replace('_','-')); if(el) el.value=d[c]||0; });
     calcTotalInternados();
     if(isAdmin()){
-      // Admin: carrega dados mas mantém editável
       aviso.style.display='none';
-      campos.forEach(el=>el.disabled=false); btn.disabled=false;
-      btn.textContent='💾 Atualizar Censo';
+      campos.forEach(el=>el.disabled=false);
+      if(btn){ btn.disabled=false; btn.textContent='💾 Atualizar Censo'; }
     } else {
-      // Recepção: bloqueia após envio
       aviso.style.display='flex';
-      document.getElementById('censo-aviso-txt').textContent=`Censo registrado em ${new Date(d.registradoEm).toLocaleString('pt-BR')}${d.editadoEm?' · editado':''}.`;
-      campos.forEach(el=>el.disabled=true); btn.disabled=true;
+      const txt=document.getElementById('censo-aviso-txt');
+      if(txt) txt.textContent=`Censo registrado em ${new Date(d.registradoEm).toLocaleString('pt-BR')}${d.editadoEm?' · editado':''}.`;
+      campos.forEach(el=>el.disabled=true);
+      if(btn) btn.disabled=true;
     }
   } else {
     aviso.style.display='none';
-    campos.forEach(el=>el.disabled=false); btn.disabled=false;
-    btn.textContent='💾 Registrar Censo';
+    campos.forEach(el=>el.disabled=false);
+    if(btn){ btn.disabled=false; btn.textContent='💾 Registrar Censo'; }
     CAMPOS_CENSO.forEach(c=>{ const el=document.getElementById('cs-'+c.replace('_','-')); if(el) el.value=0; });
     calcTotalInternados();
   }
