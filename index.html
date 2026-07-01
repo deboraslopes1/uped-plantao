@@ -901,17 +901,18 @@ window.excluirProf = async(id, nome)=>{
 };
 
 // ===== FORMULÁRIO REGISTRO =====
-function turnoPlantao() { return document.getElementById('f-turno')?.value || 'NOTURNO'; }
+function turnoPlantao() { return document.getElementById('f-turno')?.value || ''; }
 
 function turnosProfDisponiveis() {
- if (turnoPlantao() === 'DIURNO')
- return TURNOS_PROF.filter(t => t.v !== 'NOTURNO');
- return TURNOS_PROF.filter(t => t.v === 'NOTURNO');
+ const t = turnoPlantao();
+ if(!t) return [{ v:'', l:'— Turno —' }, ...TURNOS_PROF];
+ if(t === 'DIURNO') return TURNOS_PROF.filter(x => x.v !== 'NOTURNO');
+ return TURNOS_PROF.filter(x => x.v === 'NOTURNO');
 }
 
 function initEstado() {
  estado={};
- const t = turnoPlantao();
+ const t = turnoPlantao(); // pode ser '' se não selecionado
  CATS.filter(c=>c.id!=='p3').forEach(c=>{ estado[c.id]=[{nome:'',turno:t,obs:''}]; });
 }
 
