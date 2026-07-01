@@ -981,17 +981,9 @@ function atualizarSelectsP3() {
 
 async function novoRegistro() {
  editKey=null;
- const hoje = new Date().toISOString().slice(0,10);
- document.getElementById('f-data').valueAsDate=new Date();
-
- // Turno inteligente: se Diurno ainda não foi registrado hoje, sugere Diurno
- // Se Diurno já foi, sugere Noturno (ou se ambos foram, Noturno por padrão)
- const temDiurno = plantoes.some(r=>r.data===hoje && r.turno==='DIURNO');
- const temNoturno = plantoes.some(r=>r.data===hoje && r.turno==='NOTURNO');
- let turnoSugerido = 'NOTURNO';
- if (!temDiurno) turnoSugerido = 'DIURNO';
- else if (!temNoturno) turnoSugerido = 'NOTURNO';
- document.getElementById('f-turno').value = turnoSugerido;
+ // Data e turno em branco — profissional deve preencher
+ document.getElementById('f-data').value = '';
+ document.getElementById('f-turno').value = '';
 
  document.getElementById('f-obs').value='';
  document.getElementById('p3m-nome').value='';
@@ -1293,7 +1285,13 @@ function gerarTextoWA(r) {
  CATS.filter(c=>c.id!=='p3').forEach(cat=>{
  const pp=r.equipe?.[cat.id]||[];
  if(!pp.length) return;
- const nomes=pp.map(p=>nomeWA(p.nome,cat.id)+(p.obs?` (${p.obs})`:'')).join(', ');
+ const nomes=pp.map(p=>{
+   let n=nomeWA(p.nome,cat.id);
+   if(p.turno==='MANHA') n+=' (Manhã)';
+   else if(p.turno==='TARDE') n+=' (Tarde)';
+   if(p.obs) n+=` (${p.obs})`;
+   return n;
+ }).join(', ');
  txt+=`*${cat.label}:* ${nomes}\n\n`;
  });
  const p3=r.equipe?.p3;
@@ -1621,8 +1619,11 @@ window.removerUsuario = async function(uid, email, nome) {
 };
 
 function inicializarSistema() {
- document.getElementById('f-data').valueAsDate=new Date();
+ // Produção: pré-preenche com data de hoje
  document.getElementById('fp-data').valueAsDate=new Date();
+ // Registrar: começa em branco
+ document.getElementById('f-data').value='';
+ document.getElementById('f-turno').value='';
  aplicarPeriodoPadrao();
  // Listener botão criar usuário
  const btnCriar = document.getElementById('btn-criar-usuario');
