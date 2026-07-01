@@ -297,7 +297,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
 <!-- MODAL EXCLUIR PLANTÃO -->
 <div class="modal-overlay hidden" id="modal-excluir">
  <div class="modal-box">
- <h3 style="color:var(--vermelho)"> Excluir plantão</h3>
+ <h3 style="color:var(--vermelho)">Excluir plantão</h3>
  <p>Esta ação não pode ser desfeita. Digite <strong>EXCLUIR</strong> para confirmar:</p>
  <input type="text" id="modal-input" placeholder="Digite EXCLUIR">
  <div class="modal-btns">
@@ -321,18 +321,18 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <div id="header-nome" style="font-size:0.82rem;font-weight:600;color:white;"></div>
  <div id="header-perfil" style="font-size:0.7rem;opacity:0.75;"></div>
  </div>
- <button id="btn-alterar-senha" style="padding:5px 10px;background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:6px;font-size:0.75rem;cursor:pointer;white-space:nowrap;"> Senha</button>
+ <button id="btn-alterar-senha" style="padding:5px 10px;background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:6px;font-size:0.75rem;cursor:pointer;white-space:nowrap;">Senha</button>
  <button id="btn-logout" style="padding:5px 10px;background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.75rem;cursor:pointer;white-space:nowrap;">Sair</button>
  </div>
 </header>
 
 <div class="tabs">
- <button class="tab-btn active" onclick="switchTab('inicio')"> Início</button>
- <button class="tab-btn" onclick="switchTab('registrar')"> Registrar Plantão</button>
- <button class="tab-btn" id="tab-consultar" onclick="switchTab('consultar')"> Consultar Plantões</button>
- <button class="tab-btn" onclick="switchTab('producao')"> Registro de Produção</button>
- <button class="tab-btn" onclick="switchTab('gestao')"> Relatórios</button>
- <button class="tab-btn" id="tab-admin" onclick="switchTab('admin')" style="display:none;"> Painel Admin</button>
+ <button class="tab-btn active" onclick="switchTab('inicio')">Início</button>
+ <button class="tab-btn" onclick="switchTab('registrar')">Registrar Plantão</button>
+ <button class="tab-btn" id="tab-consultar" onclick="switchTab('consultar')">Consultar Plantões</button>
+ <button class="tab-btn" onclick="switchTab('producao')">Registro de Produção</button>
+ <button class="tab-btn" onclick="switchTab('gestao')">Relatórios</button>
+ <button class="tab-btn" id="tab-admin" onclick="switchTab('admin')" style="display:none;">Painel Admin</button>
 </div>
 
 <!-- ===== INÍCIO ===== -->
@@ -341,18 +341,18 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <div id="inicio-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:20px;align-items:stretch;"></div>
  <!-- Resumo do dia -->
  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;" id="inicio-resumo">
- <div class="card"><div class="card-title" style="display:block;"> Último Plantão Registrado</div><div id="inicio-ultimo-plantao" style="font-size:0.87rem;color:var(--cinza);">Carregando...</div></div>
- <div class="card"><div class="card-title" style="display:block;">⏰ Próximo Turno do Dia</div><div id="inicio-proximo-turno" style="font-size:0.87rem;color:var(--cinza);">Carregando...</div></div>
+ <div class="card"><div class="card-title" style="display:block;">Último Plantão Registrado</div><div id="inicio-ultimo-plantao" style="font-size:0.87rem;color:var(--cinza);">Carregando...</div></div>
+ <div class="card"><div class="card-title" style="display:block;">Próximo Turno do Dia</div><div id="inicio-proximo-turno" style="font-size:0.87rem;color:var(--cinza);">Carregando...</div></div>
  </div>
  <!-- Card último censo -->
  <div class="card" id="card-inicio-censo">
- <div class="card-title" style="display:block;"> Último Censo Registrado</div>
+ <div class="card-title" style="display:block;">Último Censo Registrado</div>
  <div id="inicio-ultimo-censo" style="font-size:0.87rem;color:var(--cinza);">Carregando...</div>
  </div>
 </div>
 <div class="tab-panel" id="panel-registrar">
  <div class="card">
- <div class="card-title" style="display:block;"> Dados do Plantão</div>
+ <div class="card-title" style="display:block;">Dados do Plantão</div>
  <div class="form-row">
  <div class="form-group">
  <label>Data</label>
@@ -361,13 +361,13 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <div class="form-group">
  <label>Turno do Plantão</label>
  <select id="f-turno">
- <option value="DIURNO"> Diurno</option>
- <option value="NOTURNO" selected> Noturno</option>
+ <option value="DIURNO">Diurno</option>
+ <option value="NOTURNO" selected>Noturno</option>
  </select>
  </div>
  <div class="form-group" style="flex:0;min-width:auto;justify-content:flex-end;">
  <label>&nbsp;</label>
- <button onclick="novoRegistro()" style="padding:8px 14px;background:var(--azul-claro);color:var(--azul);border:1.5px solid var(--azul);border-radius:7px;font-weight:600;cursor:pointer;font-size:0.85rem;"> Limpar</button>
+ <button onclick="novoRegistro()" style="padding:8px 14px;background:var(--azul-claro);color:var(--azul);border:1.5px solid var(--azul);border-radius:7px;font-weight:600;cursor:pointer;font-size:0.85rem;">Limpar</button>
  </div>
  </div>
  </div>
@@ -377,12 +377,12 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <div class="cat-body">
  <div class="p3-grid">
  <div class="p3-slot">
- <div class="p3-slot-label"> Manhã (11h–17h)</div>
+ <div class="p3-slot-label">Manhã (11h–17h)</div>
  <select id="p3m-nome"><option value="">— Selecionar P3 —</option></select>
  <input type="text" id="p3m-obs" placeholder="Observação">
  </div>
  <div class="p3-slot">
- <div class="p3-slot-label"> Tarde (17h–23h)</div>
+ <div class="p3-slot-label">Tarde (17h–23h)</div>
  <select id="p3t-nome"><option value="">— Selecionar P3 —</option></select>
  <input type="text" id="p3t-obs" placeholder="Observação">
  </div>
@@ -390,19 +390,19 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  </div>
  </div>
  <div class="card" style="margin-bottom:14px;">
- <div class="card-title" style="display:block;"> Observações gerais do plantão</div>
+ <div class="card-title" style="display:block;">Observações gerais do plantão</div>
  <textarea id="f-obs" placeholder="Ex: profissional chegando às 21h, substituição..." style="width:100%;min-height:65px;resize:vertical;border:1.5px solid var(--cinza-borda);border-radius:7px;padding:8px 10px;font-family:inherit;font-size:0.87rem;"></textarea>
  </div>
 
  <!-- CENSO DO PLANTÃO no Registrar -->
  <div class="card" style="margin-bottom:14px;" id="card-censo-reg">
  <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
- <span> Censo do Plantão</span>
+ <span>Censo do Plantão</span>
  <span style="font-size:0.72rem;font-weight:400;color:var(--cinza);">Salvo automaticamente ao clicar em Registrar Plantão</span>
  </div>
  <div id="censo-aviso" class="prod-bloqueado" style="display:none;">
  <span></span><span id="censo-aviso-txt"></span>
- <button class="btn-editar-prod" onclick="editarCenso()"> Editar</button>
+ <button class="btn-editar-prod" onclick="editarCenso()">Editar</button>
  </div>
  <div style="font-size:0.72rem;font-weight:700;color:var(--azul);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Pacientes Internados</div>
  <div class="prod-grid" id="censo-campos-internados">
@@ -426,7 +426,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  </div>
  </div>
 
- <button class="btn-salvar" id="btn-salvar" onclick="salvar()"> Registrar Plantão</button>
+ <button class="btn-salvar" id="btn-salvar" onclick="salvar()">Registrar Plantão</button>
  <div class="msg-edit" id="msg-edit"></div>
 </div>
 
@@ -439,17 +439,17 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <label>Turno</label>
  <select id="fi-turno">
  <option value="">Todos</option>
- <option value="DIURNO"> Diurno</option>
- <option value="NOTURNO"> Noturno</option>
+ <option value="DIURNO">Diurno</option>
+ <option value="NOTURNO">Noturno</option>
  </select>
  </div>
  <div class="form-group"><label>Profissional</label><input type="text" id="fi-nome" placeholder="Nome..."></div>
- <button class="btn-filtrar" onclick="filtrar()"> Buscar</button>
- <button class="btn-limpar" onclick="limparFiltros()"> Limpar</button>
+ <button class="btn-filtrar" onclick="filtrar()">Buscar</button>
+ <button class="btn-limpar" onclick="limparFiltros()">Limpar</button>
  </div>
  <div class="view-toggle">
- <button class="btn-view active" id="btn-view-lista" onclick="setView('lista')"> Por plantão</button>
- <button class="btn-view" id="btn-view-cat" onclick="setView('categoria')"> Por categoria</button>
+ <button class="btn-view active" id="btn-view-lista" onclick="setView('lista')">Por plantão</button>
+ <button class="btn-view" id="btn-view-cat" onclick="setView('categoria')">Por categoria</button>
  </div>
  <div id="view-lista"><div id="lista" class="lista"></div></div>
  <div id="view-categoria" style="display:none;">
@@ -460,7 +460,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <option value="">Todas as categorias</option>
  </select>
  </div>
- <button class="btn-exportar" onclick="exportarCatCSV()"> Exportar CSV</button>
+ <button class="btn-exportar" onclick="exportarCatCSV()">Exportar CSV</button>
  </div>
  <div id="tabela-cat-wrap"></div>
  </div>
@@ -469,26 +469,26 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
 <!-- ===== PRODUÇÃO ===== -->
 <div class="tab-panel" id="panel-producao">
  <div class="card" id="card-prod">
- <div class="card-title" style="display:block;"> Fechamento de Produção do Plantão</div>
+ <div class="card-title" style="display:block;">Fechamento de Produção do Plantão</div>
  <div class="form-row" style="margin-bottom:12px;">
  <div class="form-group"><label>Data</label><input type="date" id="fp-data"></div>
  <div class="form-group">
  <label>Turno</label>
  <select id="fp-turno">
- <option value="DIURNO"> Diurno</option>
- <option value="NOTURNO" selected> Noturno</option>
+ <option value="DIURNO">Diurno</option>
+ <option value="NOTURNO" selected>Noturno</option>
  </select>
  </div>
  </div>
  <div id="prod-aviso" class="prod-bloqueado" style="display:none;">
  <span></span><span id="prod-aviso-txt"></span>
- <button class="btn-editar-prod" onclick="editarProducao()"> Editar</button>
+ <button class="btn-editar-prod" onclick="editarProducao()">Editar</button>
  </div>
  <div class="prod-grid" id="prod-campos">
- <div class="prod-item"><label> Ficha Azul</label><input type="number" id="p-azul" min="0" value="0"></div>
- <div class="prod-item"><label> Ficha Verde</label><input type="number" id="p-verde" min="0" value="0"></div>
- <div class="prod-item"><label> Ficha Amarela</label><input type="number" id="p-amarela" min="0" value="0"></div>
- <div class="prod-item"><label> Ficha Vermelha</label><input type="number" id="p-vermelha" min="0" value="0"></div>
+ <div class="prod-item"><label>Ficha Azul</label><input type="number" id="p-azul" min="0" value="0"></div>
+ <div class="prod-item"><label>Ficha Verde</label><input type="number" id="p-verde" min="0" value="0"></div>
+ <div class="prod-item"><label>Ficha Amarela</label><input type="number" id="p-amarela" min="0" value="0"></div>
+ <div class="prod-item"><label>Ficha Vermelha</label><input type="number" id="p-vermelha" min="0" value="0"></div>
  </div>
  <div class="total-box" style="margin-bottom:10px;">
  <span class="label">Total de Atendimentos</span>
@@ -496,17 +496,17 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  </div>
  <div style="font-size:0.75rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Informações complementares</div>
  <div class="prod-grid" id="prod-campos-comp">
- <div class="prod-item"><label> Sint. Gripais</label><input type="number" id="p-gripais" min="0" value="0"></div>
- <div class="prod-item"><label> Sutura</label><input type="number" id="p-sutura" min="0" value="0"></div>
- <div class="prod-item"><label> Internamento</label><input type="number" id="p-internamento" min="0" value="0"></div>
- <div class="prod-item"><label> Alta</label><input type="number" id="p-alta" min="0" value="0"></div>
- <div class="prod-item"><label> Evasão</label><input type="number" id="p-evasao" min="0" value="0"></div>
- <div class="prod-item"><label> Transferência</label><input type="number" id="p-transferencia" min="0" value="0"></div>
- <div class="prod-item"><label> Óbito</label><input type="number" id="p-obito" min="0" value="0"></div>
- <div class="prod-item"><label> Raio-X</label><input type="number" id="p-raiox" min="0" value="0"></div>
- <div class="prod-item"><label> Laboratório</label><input type="number" id="p-laboratorio" min="0" value="0"></div>
+ <div class="prod-item"><label>Sint. Gripais</label><input type="number" id="p-gripais" min="0" value="0"></div>
+ <div class="prod-item"><label>Sutura</label><input type="number" id="p-sutura" min="0" value="0"></div>
+ <div class="prod-item"><label>Internamento</label><input type="number" id="p-internamento" min="0" value="0"></div>
+ <div class="prod-item"><label>Alta</label><input type="number" id="p-alta" min="0" value="0"></div>
+ <div class="prod-item"><label>Evasão</label><input type="number" id="p-evasao" min="0" value="0"></div>
+ <div class="prod-item"><label>Transferência</label><input type="number" id="p-transferencia" min="0" value="0"></div>
+ <div class="prod-item"><label>Óbito</label><input type="number" id="p-obito" min="0" value="0"></div>
+ <div class="prod-item"><label>Raio-X</label><input type="number" id="p-raiox" min="0" value="0"></div>
+ <div class="prod-item"><label>Laboratório</label><input type="number" id="p-laboratorio" min="0" value="0"></div>
  </div>
- <button class="btn-salvar" id="btn-salvar-prod" onclick="salvarProducao()"> Registrar Produção</button>
+ <button class="btn-salvar" id="btn-salvar-prod" onclick="salvarProducao()">Registrar Produção</button>
  </div>
 </div>
 
@@ -514,9 +514,9 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
 <div class="tab-panel" id="panel-gestao">
  <!-- Tabs internas -->
  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
- <button class="btn-view active" id="gtab-dash" onclick="switchGestao('dash')"> Dashboard</button>
- <button class="btn-view" id="gtab-hist" onclick="switchGestao('hist')"> Histórico de Produção</button>
- <button class="btn-view" id="gtab-censo" onclick="switchGestao('censo')"> Censo do Plantão</button>
+ <button class="btn-view active" id="gtab-dash" onclick="switchGestao('dash')">Dashboard</button>
+ <button class="btn-view" id="gtab-hist" onclick="switchGestao('hist')">Histórico de Produção</button>
+ <button class="btn-view" id="gtab-censo" onclick="switchGestao('censo')">Censo do Plantão</button>
  </div>
 
  <!-- Dashboard -->
@@ -526,11 +526,11 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <div class="form-group" style="min-width:120px;"><label>Até</label><input type="date" id="db-fim"></div>
  <div class="form-group" style="min-width:110px;">
  <label>Turno</label>
- <select id="db-turno"><option value="">Todos</option><option value="DIURNO"> Diurno</option><option value="NOTURNO"> Noturno</option></select>
+ <select id="db-turno"><option value="">Todos</option><option value="DIURNO">Diurno</option><option value="NOTURNO">Noturno</option></select>
  </div>
- <button class="btn-filtrar" onclick="renderDashboard()"> Aplicar</button>
- <button class="btn-limpar" onclick="limparDashboard()"></button>
- <button class="btn-exportar" onclick="exportarPDFDashboard()"> PDF</button>
+ <button class="btn-filtrar" onclick="renderDashboard()">Aplicar</button>
+ <button class="btn-limpar" onclick="limparDashboard()">Limpar</button>
+ <button class="btn-exportar" onclick="exportarPDFDashboard()">PDF</button>
  </div>
  <div id="dash-conteudo"><div class="dash-vazio"><div class="big"></div><div>Carregando...</div></div></div>
  </div>
@@ -539,17 +539,17 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <div id="gsec-hist" style="display:none;">
  <div class="card">
  <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
- <span> Histórico de Produção</span>
+ <span>Histórico de Produção</span>
  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;">
  <div class="form-group" style="min-width:110px;"><label>De</label><input type="date" id="rp-ini"></div>
  <div class="form-group" style="min-width:110px;"><label>Até</label><input type="date" id="rp-fim"></div>
  <div class="form-group" style="min-width:100px;"><label>Turno</label>
- <select id="rp-turno"><option value="">Todos</option><option value="DIURNO"> Diurno</option><option value="NOTURNO"> Noturno</option></select>
+ <select id="rp-turno"><option value="">Todos</option><option value="DIURNO">Diurno</option><option value="NOTURNO">Noturno</option></select>
  </div>
- <button class="btn-filtrar" onclick="filtrarProducao()" style="margin-bottom:0"></button>
- <button class="btn-limpar" onclick="limparProd()" style="margin-bottom:0"></button>
- <button class="btn-exportar" onclick="exportarProdCSV()"> CSV</button>
- <button class="btn-exportar" onclick="exportarPDFProd()" style="background:#1B6CA8;"> PDF</button>
+ <button class="btn-filtrar" onclick="filtrarProducao()" style="margin-bottom:0">Aplicar</button>
+ <button class="btn-limpar" onclick="limparProd()" style="margin-bottom:0">Limpar</button>
+ <button class="btn-exportar" onclick="exportarProdCSV()">CSV</button>
+ <button class="btn-exportar" onclick="exportarPDFProd()" style="background:#1B6CA8;">PDF</button>
  </div>
  </div>
  <div class="resumo-grid" id="resumo-prod"></div>
@@ -565,13 +565,13 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <div id="gsec-censo" style="display:none;">
  <div class="card">
  <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
- <span> Compilado de Censo</span>
+ <span>Compilado de Censo</span>
  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;">
  <div class="form-group" style="min-width:110px;"><label>De</label><input type="date" id="rc-ini"></div>
  <div class="form-group" style="min-width:110px;"><label>Até</label><input type="date" id="rc-fim"></div>
- <button class="btn-filtrar" onclick="filtrarCenso()" style="margin-bottom:0"></button>
- <button class="btn-limpar" onclick="limparCenso()" style="margin-bottom:0"></button>
- <button class="btn-exportar" onclick="exportarPDFCenso()" style="margin-bottom:0"> PDF</button>
+ <button class="btn-filtrar" onclick="filtrarCenso()" style="margin-bottom:0">Aplicar</button>
+ <button class="btn-limpar" onclick="limparCenso()" style="margin-bottom:0">Limpar</button>
+ <button class="btn-exportar" onclick="exportarPDFCenso()" style="margin-bottom:0">PDF</button>
  </div>
  </div>
  <div id="lista-censo"></div>
@@ -585,7 +585,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
 <div class="tab-panel" id="panel-admin">
  <!-- Usuários -->
  <div class="card" style="margin-bottom:14px;">
- <div class="card-title" style="display:block;"> Usuários do Sistema</div>
+ <div class="card-title" style="display:block;">Usuários do Sistema</div>
  <p style="font-size:0.83rem;color:var(--cinza);margin-bottom:14px;"><strong>Admin</strong> — acesso completo. <strong>Recepção</strong> — Registrar, Consultar e Produção apenas.</p>
  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
  <input type="text" id="nu-nome" placeholder="Nome completo" style="flex:2;min-width:140px;">
@@ -603,28 +603,28 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  <!-- Profissionais -->
  <div class="card">
  <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
- <span> Profissionais da Equipe</span>
- <button class="btn-exportar" onclick="exportarPDFProfissionais()"> Relatório PDF</button>
+ <span>Profissionais da Equipe</span>
+ <button class="btn-exportar" onclick="exportarPDFProfissionais()">Relatório PDF</button>
  </div>
  <p style="font-size:0.83rem;color:var(--cinza);margin-bottom:14px;">P3 e Evolução usam automaticamente os profissionais de <strong>Médicos Plantonistas</strong>.</p>
  <div class="add-prof-row">
  <select id="new-prof-cat" onchange="renderListaProfs()">
- <option value="recepcao"> Recepção</option>
- <option value="portaria"> Ag. de Portaria</option>
- <option value="maqueiro"> Maqueiro</option>
- <option value="motorista"> Motorista</option>
- <option value="cozinheira"> Cozinheira</option>
- <option value="aux_cozinha"> Auxiliar de Cozinha</option>
- <option value="asg"> ASG</option>
- <option value="copa"> Copeira</option>
- <option value="farmacia"> Farmácia</option>
- <option value="nutricionista"> Nutricionista</option>
- <option value="farmaceutico"> Farmacêutico</option>
- <option value="social"> Serviço Social</option>
- <option value="tec_enf"> Téc. Enfermagem</option>
- <option value="enfermeiro"> Enfermeiros(as)</option>
- <option value="medico"> Médicos Plantonistas</option>
- <option value="fisio"> Fisioterapeuta</option>
+ <option value="recepcao">Recepção</option>
+ <option value="portaria">Ag. de Portaria</option>
+ <option value="maqueiro">Maqueiro</option>
+ <option value="motorista">Motorista</option>
+ <option value="cozinheira">Cozinheira</option>
+ <option value="aux_cozinha">Auxiliar de Cozinha</option>
+ <option value="asg">ASG</option>
+ <option value="copa">Copeira</option>
+ <option value="farmacia">Farmácia</option>
+ <option value="nutricionista">Nutricionista</option>
+ <option value="farmaceutico">Farmacêutico</option>
+ <option value="social">Serviço Social</option>
+ <option value="tec_enf">Téc. Enfermagem</option>
+ <option value="enfermeiro">Enfermeiros(as)</option>
+ <option value="medico">Médicos Plantonistas</option>
+ <option value="fisio">Fisioterapeuta</option>
  </select>
  <input type="text" id="new-prof-nome" placeholder="Nome completo do profissional">
  <button class="btn-add-prof" onclick="adicionarProfissional()">+ Adicionar</button>
@@ -646,7 +646,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
  </div>
  <div id="modal-prod-resumo" style="background:var(--cinza-claro);border-radius:8px;padding:12px 14px;margin-bottom:16px;"></div>
  <div style="display:flex;gap:10px;flex-wrap:wrap;">
- <button id="modal-prod-wa" style="flex:1;padding:11px;background:#25D366;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;"> Enviar no WhatsApp</button>
+ <button id="modal-prod-wa" style="flex:1;padding:11px;background:#25D366;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;">Enviar no WhatsApp</button>
  <button onclick="fecharModalProd()" style="padding:11px 18px;background:var(--cinza-claro);color:var(--cinza);border:1.5px solid var(--cinza-borda);border-radius:8px;font-weight:600;cursor:pointer;font-size:0.88rem;">Fechar</button>
  </div>
  </div>
@@ -677,7 +677,7 @@ input:disabled, select:disabled { background:var(--cinza-claro); color:var(--cin
 <!-- MODAL ALTERAR SENHA -->
 <div class="modal-overlay hidden" id="modal-alterar-senha">
  <div class="modal-box" style="max-width:380px;">
- <h3 style="color:var(--azul);margin-bottom:16px;"> Alterar Senha</h3>
+ <h3 style="color:var(--azul);margin-bottom:16px;">Alterar Senha</h3>
  <div style="display:flex;flex-direction:column;gap:10px;">
  <div><label style="font-size:0.72rem;font-weight:600;color:var(--cinza);text-transform:uppercase;display:block;margin-bottom:4px;">Senha atual</label>
  <input type="password" id="as-atual" placeholder="••••••••"></div>
@@ -737,10 +737,10 @@ window.abrirSenha = function(titulo, desc, cb) {
 };
 
 const TURNOS_PROF = [
- { v:'DIURNO', l:' Diurno' },
- { v:'NOTURNO', l:' Noturno' },
- { v:'MANHA', l:' Manhã' },
- { v:'TARDE', l:' Tarde' }
+  { v:'DIURNO', l:'Diurno' },
+  { v:'NOTURNO', l:'Noturno' },
+  { v:'MANHA', l:'Manhã' },
+  { v:'TARDE', l:'Tarde' }
 ];
 const SIGLAS = { DIURNO:'D', NOTURNO:'N', MANHA:'M', TARDE:'T' };
 const DIAS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
@@ -936,7 +936,7 @@ function renderCatBody(catId) {
  body.innerHTML='';
  const ativos=profsAtivos(catId);
  if(ativos.length===0){
- body.innerHTML=`<div class="sem-cadastro"> Nenhum profissional cadastrado nesta categoria.<br><small>Acesse <strong>Painel Admin</strong> para adicionar.</small></div>`;
+ body.innerHTML=`<div class="sem-cadastro">Nenhum profissional cadastrado nesta categoria.<br><small>Acesse <strong>Painel Admin</strong> para adicionar.</small></div>`;
  return;
  }
  (estado[catId]||[{nome:'',turno:turnoPlantao(),obs:''}]).forEach((slot,i)=>{
@@ -1187,13 +1187,13 @@ function renderLista(lista) {
  <div class="det-grid">${renderDetalhe(r)}</div>
  ${r.obs?`<div class="obs-bloco"> ${r.obs}</div>`:''}
  <div class="pc-acoes">
- ${window._isAdmin ? `<button class="btn-edit" onclick="editarPlantao('${r.key}')"> Editar</button>` : ''}
- <button class="btn-wa" onclick="compartilharWA('${r.key}')"> WhatsApp</button>
- ${window._isAdmin ? `<button class="btn-del" onclick="abrirExcluir('${r.key}')"> Excluir</button>` : ''}
+ ${window._isAdmin ? `<button class="btn-edit" onclick="editarPlantao('${r.key}')">Editar</button>` : ''}
+ <button class="btn-wa" onclick="compartilharWA('${r.key}')">WhatsApp</button>
+ ${window._isAdmin ? `<button class="btn-del" onclick="abrirExcluir('${r.key}')">Excluir</button>` : ''}
  </div>
  <div style="margin-top:8px;padding-top:7px;border-top:1px solid var(--cinza-borda);font-size:0.72rem;color:var(--cinza);line-height:1.8;">
  ${r.registradoPor ? ` Registrado por: <strong>${r.registradoPor.nome}</strong>${r.registradoEm?' · '+new Date(r.registradoEm).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}` : ''}
- ${r.editadoPor ? `<br> Editado por: <strong>${r.editadoPor.nome}</strong>${r.editadoEm?' · '+new Date(r.editadoEm).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}` : ''}
+ ${r.editadoPor ? `<br>Editado por: <strong>${r.editadoPor.nome}</strong>${r.editadoEm?' · '+new Date(r.editadoEm).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}` : ''}
  </div>
  </div>`;
  el.appendChild(div);
@@ -1220,18 +1220,18 @@ function renderDetalhe(r) {
  const censo=censos.find(c=>c.key===r.key);
  if(censo){
  html+=`<div class="det-cat" style="grid-column:1/-1;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;">
- <div class="det-cat-titulo" style="color:#1D4ED8;"> Censo do Plantão</div>
+ <div class="det-cat-titulo" style="color:#1D4ED8;">Censo do Plantão</div>
  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;">
  <span style="font-size:0.8rem;">Geral: <b>${censo.nemo||0}</b></span>
  <span style="font-size:0.8rem;">Respiratória: <b>${censo.dory||0}</b></span>
- <span style="font-size:0.8rem;"> S.Verm.: <b>${censo.vermelha||0}${censo.vermelha_obs?'+'+censo.vermelha_obs+'(OBS)':''}</b></span>
+ <span style="font-size:0.8rem;">S.Verm.: <b>${censo.vermelha||0}${censo.vermelha_obs?'+'+censo.vermelha_obs+'(OBS)':''}</b></span>
  <span style="font-size:0.8rem;font-weight:700;color:#1D4ED8;">Total: ${censo.totalInternados||0}</span>
  <span style="font-size:0.8rem;color:var(--cinza);">|</span>
  <span style="font-size:0.8rem;">⏳ Reg.: <b>${censo.regulacao||0}</b></span>
- <span style="font-size:0.8rem;"> Intub.: <b>${censo.intubados||0}</b></span>
+ <span style="font-size:0.8rem;">Intub.: <b>${censo.intubados||0}</b></span>
  <span style="font-size:0.8rem;">CPAP: <b>${censo.cpap||0}</b></span>
  <span style="font-size:0.8rem;">VNI: <b>${censo.vni||0}</b></span>
- <span style="font-size:0.8rem;"> Isol.: <b>${censo.isolamento||0}</b></span>
+ <span style="font-size:0.8rem;">Isol.: <b>${censo.isolamento||0}</b></span>
  </div>
  </div>`;
  }
@@ -1597,7 +1597,7 @@ async function carregarUsuarios() {
  <div style="font-size:0.74rem;color:var(--cinza);">${u.email}</div>
  </div>
  <span class="${u.perfil==='admin'?'badge-ativo':'badge-inativo'}">${u.perfil==='admin'?'Admin':'Recepção'}</span>
- <button onclick="resetarSenhaUsuario('${u.email}','${u.nome.replace(/'/g,"\\'")}')" style="padding:4px 10px;background:var(--azul-claro);color:var(--azul);border:1.5px solid var(--azul);border-radius:6px;font-size:0.74rem;font-weight:600;cursor:pointer;"> Reset senha</button>
+ <button onclick="resetarSenhaUsuario('${u.email}','${u.nome.replace(/'/g,"\\'")}')" style="padding:4px 10px;background:var(--azul-claro);color:var(--azul);border:1.5px solid var(--azul);border-radius:6px;font-size:0.74rem;font-weight:600;cursor:pointer;">Reset senha</button>
  <button class="btn-excluir-p" onclick="removerUsuario('${d.id}','${u.email}','${u.nome.replace(/'/g,"\\'")}')"></button>
  </div>`;
  }).join('');
@@ -1699,12 +1699,12 @@ function renderInicio(){
  const temDiurno = plantaoHoje.some(r=>r.turno==='DIURNO');
  const temNoturno = plantaoHoje.some(r=>r.turno==='NOTURNO');
  let proximoTxt = '';
- if(!temDiurno && !temNoturno) proximoTxt = '<span style="color:var(--amarelo);font-weight:600;"> Nenhum plantão registrado hoje ainda.</span>';
- else if(!temDiurno) proximoTxt = '<span style="color:var(--verde);font-weight:600;"> Diurno pendente de registro.</span>';
- else if(!temNoturno) proximoTxt = '<span style="color:var(--verde);font-weight:600;"> Noturno pendente de registro.</span>';
- else proximoTxt = '<span style="color:var(--cinza);"> Ambos os turnos registrados hoje.</span>';
+ if(!temDiurno && !temNoturno) proximoTxt = '<span style="color:var(--amarelo);font-weight:600;">Nenhum plantão registrado hoje ainda.</span>';
+ else if(!temDiurno) proximoTxt = '<span style="color:var(--verde);font-weight:600;">Diurno pendente de registro.</span>';
+ else if(!temNoturno) proximoTxt = '<span style="color:var(--verde);font-weight:600;">Noturno pendente de registro.</span>';
+ else proximoTxt = '<span style="color:var(--cinza);">Ambos os turnos registrados hoje.</span>';
  const el_turno = document.getElementById('inicio-proximo-turno');
- if(el_turno) el_turno.innerHTML = `<div style="margin-bottom:6px;font-size:0.8rem;color:var(--cinza);">Hoje: ${hoje.split('-').reverse().join('/')}</div>${proximoTxt}<br><button onclick="switchTab('registrar')" style="margin-top:10px;padding:6px 14px;background:var(--azul);color:white;border:none;border-radius:7px;font-weight:600;cursor:pointer;font-size:0.82rem;"> Registrar Plantão</button>`;
+ if(el_turno) el_turno.innerHTML = `<div style="margin-bottom:6px;font-size:0.8rem;color:var(--cinza);">Hoje: ${hoje.split('-').reverse().join('/')}</div>${proximoTxt}<br><button onclick="switchTab('registrar')" style="margin-top:10px;padding:6px 14px;background:var(--azul);color:white;border:none;border-radius:7px;font-weight:600;cursor:pointer;font-size:0.82rem;">Registrar Plantão</button>`;
  const ultimo = plantoes[0];
  const el_ult = document.getElementById('inicio-ultimo-plantao');
  if(el_ult){
@@ -1712,7 +1712,7 @@ function renderInicio(){
  else {
  const [a,m,d]=ultimo.data.split('-');
  const meds=(ultimo.equipe?.medico||[]).map(p=>abr(p.nome)).filter(Boolean).slice(0,2).join(' · ')||'—';
- el_ult.innerHTML=`<div style="font-weight:700;font-size:1rem;color:var(--texto);margin-bottom:4px;">${d}/${m}/${a} — ${ultimo.turno}</div><div style="font-size:0.8rem;color:var(--cinza);"> ${meds}</div><button onclick="switchTab('consultar')" style="margin-top:10px;padding:6px 14px;background:var(--azul-claro);color:var(--azul);border:1.5px solid var(--azul);border-radius:7px;font-weight:600;cursor:pointer;font-size:0.82rem;"> Ver todos</button>`;
+ el_ult.innerHTML=`<div style="font-weight:700;font-size:1rem;color:var(--texto);margin-bottom:4px;">${d}/${m}/${a} — ${ultimo.turno}</div><div style="font-size:0.8rem;color:var(--cinza);"> ${meds}</div><button onclick="switchTab('consultar')" style="margin-top:10px;padding:6px 14px;background:var(--azul-claro);color:var(--azul);border:1.5px solid var(--azul);border-radius:7px;font-weight:600;cursor:pointer;font-size:0.82rem;">Ver todos</button>`;
  }
  }
  // Card último censo
@@ -1969,7 +1969,7 @@ function abrirModalConfirmacaoProd(d) {
  const ds=DIAS[new Date(d.data+'T12:00:00').getDay()];
  document.getElementById('modal-prod-resumo').innerHTML=`
  <div style="font-size:0.9rem;font-weight:700;margin-bottom:10px;color:var(--azul)">${dd}/${m}/${a} — ${ds} · ${d.turno}</div>
- <div style="font-size:0.85rem;margin-bottom:4px;"> Azul: <b>${d.azul||0}</b> · Verde: <b>${d.verde||0}</b> · Amarela: <b>${d.amarela||0}</b> · Vermelha: <b>${d.vermelha||0}</b></div>
+ <div style="font-size:0.85rem;margin-bottom:4px;">Azul: <b>${d.azul||0}</b> · Verde: <b>${d.verde||0}</b> · Amarela: <b>${d.amarela||0}</b> · Vermelha: <b>${d.vermelha||0}</b></div>
  <div style="font-size:0.9rem;font-weight:700;color:var(--azul);margin-top:8px;">Total: ${d.total||0} atendimentos</div>`;
  document.getElementById('modal-prod-wa').onclick=()=>{ window.compartilharWAProd(d); };
  document.getElementById('modal-prod-confirmacao').classList.remove('hidden');
@@ -2036,7 +2036,7 @@ function renderHistProd(l){
  <div class="prod-hist-body">
  <div class="prod-num-grid">${itens}</div>
  <div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--cinza-borda);">
- <button onclick="excluirProducao('${r.key}','${d}/${m}/${a}','${r.turno}')" style="padding:5px 12px;background:white;color:var(--cinza);border:1.5px solid var(--cinza-borda);border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#FEE2E2';this.style.color='var(--vermelho)';this.style.borderColor='#FECACA'" onmouseout="this.style.background='white';this.style.color='var(--cinza)';this.style.borderColor='var(--cinza-borda)'"> Excluir registro</button>
+ <button onclick="excluirProducao('${r.key}','${d}/${m}/${a}','${r.turno}')" style="padding:5px 12px;background:white;color:var(--cinza);border:1.5px solid var(--cinza-borda);border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#FEE2E2';this.style.color='var(--vermelho)';this.style.borderColor='#FECACA'" onmouseout="this.style.background='white';this.style.color='var(--cinza)';this.style.borderColor='var(--cinza-borda)'">Excluir registro</button>
  </div>
  </div>
  </div>`;
@@ -2099,10 +2099,10 @@ window.renderDashboard=function(){
  <div class="dash-card">
  <div class="dash-titulo">Diurno × Noturno</div>
  <div class="turno-comp">
- <div class="turno-bloco"><div class="turno-titulo"> Diurno (${diu.length})</div>
+ <div class="turno-bloco"><div class="turno-titulo">Diurno (${diu.length})</div>
  ${[['Total',st(diu,'total')],['Média',diu.length?Math.round(st(diu,'total')/diu.length):0],['Internamentos',st(diu,'internamento')],['Transferências',st(diu,'transferencia')],['Sint. Gripais',st(diu,'gripais')]].map(([l,v])=>`<div class="turno-linha"><span>${l}</span><span class="val">${v}</span></div>`).join('')}
  </div>
- <div class="turno-bloco"><div class="turno-titulo"> Noturno (${not.length})</div>
+ <div class="turno-bloco"><div class="turno-titulo">Noturno (${not.length})</div>
  ${[['Total',st(not,'total')],['Média',not.length?Math.round(st(not,'total')/not.length):0],['Internamentos',st(not,'internamento')],['Transferências',st(not,'transferencia')],['Sint. Gripais',st(not,'gripais')]].map(([l,v])=>`<div class="turno-linha"><span>${l}</span><span class="val">${v}</span></div>`).join('')}
  </div>
  </div>
@@ -2278,7 +2278,7 @@ function renderHistCenso(l){
  <div style="font-size:0.72rem;font-weight:700;color:var(--azul);text-transform:uppercase;margin:10px 0 6px;">Situação Clínica</div>
  <div class="prod-num-grid">${itensClin}</div>
  ${window._isAdmin?`<div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--cinza-borda);">
- <button onclick="excluirCenso('${r.key}','${d}/${m}/${a}','${r.turno}')" style="padding:5px 12px;background:white;color:var(--cinza);border:1.5px solid var(--cinza-borda);border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#FEE2E2';this.style.color='var(--vermelho)';this.style.borderColor='#FECACA'" onmouseout="this.style.background='white';this.style.color='var(--cinza)';this.style.borderColor='var(--cinza-borda)'"> Excluir censo</button>
+ <button onclick="excluirCenso('${r.key}','${d}/${m}/${a}','${r.turno}')" style="padding:5px 12px;background:white;color:var(--cinza);border:1.5px solid var(--cinza-borda);border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#FEE2E2';this.style.color='var(--vermelho)';this.style.borderColor='#FECACA'" onmouseout="this.style.background='white';this.style.color='var(--cinza)';this.style.borderColor='var(--cinza-borda)'">Excluir censo</button>
  </div>`:''}
  </div>
  </div>`;
